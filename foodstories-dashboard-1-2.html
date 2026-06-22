@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLUXDEMO — Returns Intelligence Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300..700&family=Inter:wght@300..800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<style>
+:root,[data-theme="dark"]{
+  --bg:#0d0d0f;--surface:#121215;--surface-2:#17171b;--surface-3:#1e1e24;
+  --border:rgba(255,255,255,0.07);--border-bright:rgba(255,255,255,0.14);
+  --text:#e8e8f0;--text-muted:#8888a0;--text-faint:#44445a;
+  --accent:#6c63ff;--accent-2:#ff6584;--accent-3:#43e97b;--accent-4:#fa8231;--accent-5:#00b8d4;
+  --red:#ff4757;--green:#2ed573;--yellow:#ffa502;--blue:#1e90ff;--purple:#a29bfe;
+  --chart1:#6c63ff;--chart2:#ff6b6b;--chart3:#43e97b;--chart4:#fa8231;--chart5:#00b8d4;--chart6:#fd79a8;
+  --radius:12px;--radius-sm:6px;--radius-lg:20px;
+  --shadow:0 8px 32px rgba(0,0,0,0.5);
+  --transition:0.22s cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="light"]{
+  --bg:#f0f0f7;--surface:#ffffff;--surface-2:#f8f8fc;--surface-3:#ececf5;
+  --border:rgba(0,0,0,0.08);--border-bright:rgba(0,0,0,0.14);
+  --text:#1a1a2e;--text-muted:#555570;--text-faint:#aaaacc;
+  --shadow:0 8px 32px rgba(0,0,0,0.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden}
+.font-mono{font-family:'Geist Mono',monospace;font-variant-numeric:tabular-nums lining-nums}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:220px 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+.topbar{grid-column:1/-1;display:flex;align-items:center;padding:0 24px;height:58px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:100;gap:16px}
+.logo-mark{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-0.3px}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--chart1),var(--chart2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.badge-live{background:rgba(43,237,115,0.15);color:var(--green);border:1px solid rgba(43,237,115,0.3);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.btn-theme{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:6px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:12px;transition:var(--transition)}
+.btn-theme:hover{color:var(--text);border-color:var(--border-bright)}
+.date-range{display:flex;gap:4px}
+.dr-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:5px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:11px;font-weight:500;transition:var(--transition)}
+.dr-btn.active,.dr-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 0;display:flex;flex-direction:column;gap:2px}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:1.2px;color:var(--text-faint);text-transform:uppercase;padding:0 8px;margin-bottom:6px;margin-top:12px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;color:var(--text-muted);transition:var(--transition)}
+.nav-item:hover{background:var(--surface-2);color:var(--text)}
+.nav-item.active{background:rgba(108,99,255,0.15);color:var(--accent);font-weight:600}
+.nav-item .icon{width:18px;height:18px;opacity:0.7}
+.nav-footer{margin-top:auto;padding:12px}
+.nav-kpi-mini{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+
+/* ── MAIN ── */
+.main{overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:20px;background:var(--bg)}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.page-title{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.page-subtitle{font-size:12px;color:var(--text-muted);margin-top:2px}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap}
+.filter-chip{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:5px 14px;border-radius:20px;font-size:11px;cursor:pointer;transition:var(--transition);font-weight:500}
+.filter-chip.active,.filter-chip:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden;transition:var(--transition)}
+.kpi-card:hover{border-color:var(--border-bright);transform:translateY(-1px);box-shadow:var(--shadow)}
+.kpi-card::before{content:'';position:absolute;inset:0;opacity:0.04;background:var(--accent-color,var(--accent));pointer-events:none}
+.kpi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px;background:var(--icon-bg)}
+.kpi-label{font-size:11px;color:var(--text-muted);font-weight:500;letter-spacing:0.3px;text-transform:uppercase;margin-bottom:6px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
+.kpi-value.small{font-size:20px}
+.kpi-delta{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-top:8px;padding:2px 8px;border-radius:20px}
+.kpi-delta.up{background:rgba(46,213,115,0.12);color:var(--green)}
+.kpi-delta.down{background:rgba(255,71,87,0.12);color:var(--red)}
+.kpi-delta.flat{background:rgba(136,136,160,0.12);color:var(--text-muted)}
+.sparkline-wrap{position:absolute;bottom:0;right:0;width:80px;height:40px;opacity:0.35}
+
+/* ── CHART GRID ── */
+.chart-grid{display:grid;gap:16px}
+.chart-row-2{grid-template-columns:1fr 1fr}
+.chart-row-3{grid-template-columns:1.6fr 1fr 1fr}
+.chart-row-full{grid-template-columns:1fr}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:var(--transition);position:relative;overflow:hidden}
+.chart-card:hover{border-color:var(--border-bright)}
+.chart-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.chart-title{font-size:13px;font-weight:600;letter-spacing:-0.2px}
+.chart-subtitle{font-size:11px;color:var(--text-muted);margin-top:2px}
+.chart-actions{display:flex;gap:6px}
+.chart-action-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:var(--radius-sm);font-size:10px;cursor:pointer;transition:var(--transition);font-weight:500}
+.chart-action-btn:hover{color:var(--text);border-color:var(--border-bright)}
+.chart-wrap{position:relative;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-muted);cursor:pointer}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── INDIA MAP ── */
+.map-container{position:relative;width:100%;height:420px;background:var(--surface-2);border-radius:var(--radius);overflow:hidden}
+#india-map{width:100%;height:100%}
+.map-tooltip{position:fixed;pointer-events:none;background:var(--surface-3);border:1px solid var(--border-bright);border-radius:var(--radius);padding:14px 16px;font-size:12px;box-shadow:var(--shadow);min-width:200px;z-index:1000;opacity:0;transition:opacity 0.15s}
+.map-tooltip.visible{opacity:1}
+.tooltip-state{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--accent)}
+.tooltip-row{display:flex;justify-content:space-between;gap:24px;margin-bottom:4px}
+.tooltip-label{color:var(--text-muted)}
+.tooltip-val{font-weight:600;font-variant-numeric:tabular-nums}
+.map-legend{position:absolute;bottom:16px;right:16px;background:rgba(13,13,15,0.85);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:10px}
+.map-legend-title{color:var(--text-muted);margin-bottom:6px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.map-legend-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin-bottom:4px;width:120px}
+.map-legend-labels{display:flex;justify-content:space-between;color:var(--text-faint);font-size:9px}
+
+/* ── TABLE ── */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.table-toolbar{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}
+.table-search{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:var(--radius-sm);font-size:12px;outline:none;width:220px;transition:var(--transition)}
+.table-search:focus{border-color:var(--accent)}
+.table-search::placeholder{color:var(--text-faint)}
+.table-meta{font-size:11px;color:var(--text-muted);margin-left:auto}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--text-faint);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;background:var(--surface);cursor:pointer;transition:var(--transition)}
+thead th:hover{color:var(--text)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background var(--transition)}
+tbody tr:hover{background:var(--surface-2)}
+tbody td{padding:10px 16px;font-size:12px;color:var(--text);white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.tag-online{background:rgba(0,184,212,0.15);color:var(--accent-5)}
+.tag-fd{background:rgba(108,99,255,0.15);color:var(--accent)}
+.tag-city{background:var(--surface-3);color:var(--text-muted)}
+.rgm-bar{display:flex;align-items:center;gap:8px}
+.rgm-track{flex:1;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden}
+.rgm-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.16,1,0.3,1)}
+.rgm-val{font-size:11px;font-weight:600;min-width:36px;text-align:right}
+
+/* ── INSIGHT PANEL ── */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:var(--transition)}
+.insight-card:hover{border-color:var(--border-bright);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.insight-icon{font-size:24px;margin-bottom:10px}
+.insight-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px}
+.insight-text{font-size:11px;color:var(--text-muted);line-height:1.6}
+.insight-highlight{color:var(--accent);font-weight:700}
+.insight-card.warn .insight-highlight{color:var(--yellow)}
+.insight-card.danger .insight-highlight{color:var(--red)}
+.insight-card.success .insight-highlight{color:var(--green)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:3px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.kpi-card,.chart-card,.table-card,.insight-card{animation:fadeUp 0.4s ease both}
+.kpi-card:nth-child(1){animation-delay:0.05s}
+.kpi-card:nth-child(2){animation-delay:0.1s}
+.kpi-card:nth-child(3){animation-delay:0.15s}
+.kpi-card:nth-child(4){animation-delay:0.2s}
+.kpi-card:nth-child(5){animation-delay:0.25s}
+.kpi-card:nth-child(6){animation-delay:0.3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .chart-row-2,.chart-row-3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="app">
+<header class="topbar">
+  <div class="logo-mark">
+    <div class="logo-icon">🌿</div>
+    <span>FLUXDEMO</span>
+    <span style="color:var(--text-faint);font-weight:400">/ Returns Intelligence</span>
+  </div>
+  <span class="badge-live">● LIVE</span>
+  <div class="date-range" style="margin-left:16px">
+    <button class="dr-btn active">Apr 2026</button>
+    <button class="dr-btn">Q1</button>
+    <button class="dr-btn">YTD</button>
+  </div>
+  <div class="topbar-right">
+    <button class="btn-theme" onclick="exportDashboard()" title="Export">⬇ Export</button>
+    <button class="btn-theme" data-theme-toggle>☀ Light</button>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Analytics</div>
+    <div class="nav-item active">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview
+    </div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Trends
+    </div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20A15 15 0 0 1 12 2z"/></svg>
+      Geo Intelligence
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Commerce</div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Products
+    </div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Customers
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Finance</div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      RGM / Margins
+    </div>
+    <div class="nav-item">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Reports
+    </div>
+  </div>
+  <div class="nav-footer">
+    <div class="nav-kpi-mini">
+      <div style="font-size:10px;color:var(--text-faint);margin-bottom:6px;font-weight:600;letter-spacing:0.5px">QUICK STATS</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:11px;color:var(--text-muted)">Total Returns</span>
+        <span style="font-size:11px;font-weight:700;color:var(--red);font-variant-numeric:tabular-nums">₹32,126</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:11px;color:var(--text-muted)">Avg RGM</span>
+        <span style="font-size:11px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums">41.5%</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:11px;color:var(--text-muted)">Transactions</span>
+        <span style="font-size:11px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums">57</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Returns Intelligence Hub</div>
+      <div class="page-subtitle">Billing Type: ZRFP · April 2026 · All Regions</div>
+    </div>
+    <div class="filter-bar">
+      <button class="filter-chip active" onclick="filterRegion('ALL',this)">All Regions</button>
+      <button class="filter-chip" onclick="filterRegion('07',this)">🏙 Delhi</button>
+      <button class="filter-chip" onclick="filterRegion('29',this)">🌆 Bangalore</button>
+      <button class="filter-chip" onclick="filterRegion('36',this)">🌴 Hyderabad</button>
+      <button class="filter-chip" onclick="filterRegion('06',this)">🏢 Gurgaon</button>
+    </div>
+  </div>
+
+  <!-- KPI GRID -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card" style="--accent-color:var(--red);--icon-bg:rgba(255,71,87,0.12)">
+      <div class="kpi-icon">↩</div>
+      <div class="kpi-label">Total Return Value</div>
+      <div class="kpi-value font-mono" id="kv1">₹32,126</div>
+      <span class="kpi-delta down">▼ Returns Period</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:var(--accent);--icon-bg:rgba(108,99,255,0.12)">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-label">Transactions</div>
+      <div class="kpi-value font-mono" id="kv2">57</div>
+      <span class="kpi-delta flat">→ Return Bills</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:var(--green);--icon-bg:rgba(46,213,115,0.12)">
+      <div class="kpi-icon">%</div>
+      <div class="kpi-label">Avg Gross Margin</div>
+      <div class="kpi-value font-mono" id="kv3">41.5%</div>
+      <span class="kpi-delta up">▲ Retained Margin</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:var(--yellow);--icon-bg:rgba(255,165,2,0.12)">
+      <div class="kpi-icon">🛒</div>
+      <div class="kpi-label">Avg Return/Bill</div>
+      <div class="kpi-value font-mono small" id="kv4">₹564</div>
+      <span class="kpi-delta flat">→ Per Transaction</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:var(--accent-5);--icon-bg:rgba(0,184,212,0.12)">
+      <div class="kpi-icon">🌐</div>
+      <div class="kpi-label">Online vs FD</div>
+      <div class="kpi-value font-mono small" id="kv5">23%</div>
+      <span class="kpi-delta flat">→ Online Share</span>
+    </div>
+    <div class="kpi-card" style="--accent-color:var(--accent-2);--icon-bg:rgba(255,101,132,0.12)">
+      <div class="kpi-icon">🥑</div>
+      <div class="kpi-label">Top Category</div>
+      <div class="kpi-value font-mono small" id="kv6">F&V</div>
+      <span class="kpi-delta up">▲ 84% of Returns</span>
+    </div>
+  </div>
+
+  <!-- ROW 1: TREND + DONUT -->
+  <div class="chart-grid chart-row-2">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Return Value Trend by Date</div>
+          <div class="chart-subtitle">Daily return value accumulation across all stores</div>
+        </div>
+        <div class="chart-actions">
+          <button class="chart-action-btn active" onclick="switchTrend('value',this)">₹ Value</button>
+          <button class="chart-action-btn" onclick="switchTrend('count',this)">Count</button>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Returns by Category</div>
+          <div class="chart-subtitle">Dept-level distribution of return value</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="chart-wrap" style="height:200px;width:180px;flex-shrink:0">
+          <canvas id="deptDonut"></canvas>
+        </div>
+        <div class="legend" style="flex-direction:column;gap:8px" id="deptLegend"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: CITY BAR + CHANNEL PIE + RGM SCATTER -->
+  <div class="chart-grid chart-row-3">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Return Value by City & Store</div>
+          <div class="chart-subtitle">Stacked by distribution channel</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="cityBar"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Online vs In-Store</div>
+          <div class="chart-subtitle">Channel split</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:170px;display:flex;align-items:center;justify-content:center">
+        <canvas id="channelPie" style="max-width:170px"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Sub-Class Performance</div>
+          <div class="chart-subtitle">Return value by sub-class</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:200px">
+        <canvas id="subclassBar"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDIA MAP -->
+  <div class="chart-card" style="padding:20px">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">📍 India Returns Geo-Intelligence Map</div>
+        <div class="chart-subtitle">Hover over states to see detailed return metrics. Active states highlighted by return volume.</div>
+      </div>
+      <div class="chart-actions">
+        <button class="chart-action-btn active" onclick="switchMapMetric('value',this)">₹ Value</button>
+        <button class="chart-action-btn" onclick="switchMapMetric('rgm',this)">RGM %</button>
+        <button class="chart-action-btn" onclick="switchMapMetric('count',this)">Count</button>
+      </div>
+    </div>
+    <div class="map-container">
+      <svg id="india-map"></svg>
+      <div class="map-legend" id="mapLegend">
+        <div class="map-legend-title">Return Value</div>
+        <div class="map-legend-bar" id="mapLegendBar"></div>
+        <div class="map-legend-labels"><span>Low</span><span>High</span></div>
+      </div>
+    </div>
+    <div class="map-tooltip" id="mapTooltip"></div>
+  </div>
+
+  <!-- ROW 3: BRAND + HSNCODE -->
+  <div class="chart-grid chart-row-2">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Top Brands by Return Value</div>
+          <div class="chart-subtitle">Horizontal bar — sorted descending</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="brandBar"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">RGM % Distribution</div>
+          <div class="chart-subtitle">Gross margin spread across all SKUs</div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="rgmHist"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS -->
+  <div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <span>⚡</span> AI-Powered Insights
+    </div>
+    <div class="insight-grid" id="insightGrid"></div>
+  </div>
+
+  <!-- DATA TABLE -->
+  <div class="table-card" id="tableSection">
+    <div class="table-toolbar">
+      <div style="font-size:13px;font-weight:700">Return Transactions</div>
+      <input class="table-search" id="tableSearch" placeholder="Search article, city, brand..." oninput="filterTable(this.value)">
+      <div class="table-meta" id="tableMeta">57 records</div>
+    </div>
+    <div class="table-wrap" style="max-height:420px;overflow-y:auto">
+      <table id="mainTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('date')">Date ↕</th>
+            <th onclick="sortTable('city')">City ↕</th>
+            <th onclick="sortTable('store')">Store</th>
+            <th>Channel</th>
+            <th onclick="sortTable('article')">Article</th>
+            <th onclick="sortTable('brand')">Brand</th>
+            <th onclick="sortTable('dept')">Dept</th>
+            <th onclick="sortTable('netSales')">Net Sales ↕</th>
+            <th onclick="sortTable('cogs')">COGS ↕</th>
+            <th onclick="sortTable('rgm')">RGM ↕</th>
+            <th onclick="sortTable('rgmPct')">RGM % ↕</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- MAP TOOLTIP -->
+<div class="map-tooltip" id="mapTooltip2"></div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════
+const RAW = [
+  {date:'01-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'ON',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'HASS AVOCADO',netSales:-400,cogs:-179.56,rgm:-220.44,rgmPct:55},
+  {date:'01-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:"SUCHALI'S",dept:'LIVE KITCHEN RETAIL',subclass:'BREADS',article:"SUCHALIS COUNTRY SOURDOUGH 350G",netSales:-150,cogs:-97.5,rgm:-52.5,rgmPct:35},
+  {date:'02-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'MANGO',article:'FS THAI MANGO 500G',netSales:-900,cogs:-604.99,rgm:-295.01,rgmPct:33},
+  {date:'02-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'BASIC VEGETABLES',article:'FS ORGANIC LEMFS 500G',netSales:-250,cogs:-160,rgm:-90,rgmPct:36},
+  {date:'02-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CUT RANGE',article:'GUACAMOLE',netSales:-400,cogs:-203.9,rgm:-196.1,rgmPct:49},
+  {date:'02-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'FS HASS AVOCADO 4Pc',netSales:-1600,cogs:-719.88,rgm:-880.12,rgmPct:55},
+  {date:'03-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'AMUL',dept:'DAIRY',subclass:'MILK',article:'AMUL TAAZA FRESH TONED MILK 1LTR',netSales:-75,cogs:-70.5,rgm:-4.5,rgmPct:6},
+  {date:'03-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'MANGO',article:'ALPHONSO RATNAGIRI PREMIUM MANGO',netSales:-560,cogs:-400,rgm:-160,rgmPct:29},
+  {date:'05-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'ON',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'OTHER FRUITS',article:'FIG',netSales:-130,cogs:-95,rgm:-35,rgmPct:27},
+  {date:'05-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'ON',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'LEAFY VEGETABLES',article:'DILL LEAVES 250 GM',netSales:-55,cogs:-37.5,rgm:-17.5,rgmPct:32},
+  {date:'05-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'ON',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'SALAD & MICROGREENS',article:'EDIBLE FLOWER',netSales:-300,cogs:-150,rgm:-150,rgmPct:50},
+  {date:'05-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'PERSIMMON',netSales:-1660,cogs:-747,rgm:-913,rgmPct:55},
+  {date:'05-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'APPLE',article:'ROCKIT APPLE',netSales:-450,cogs:-330,rgm:-120,rgmPct:27},
+  {date:'05-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CHILLIES',article:'FS BIRD EYE CHILLI IMP 500G',netSales:-750,cogs:-500,rgm:-250,rgmPct:33},
+  {date:'05-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'PERSIMMON',netSales:-1660,cogs:-498,rgm:-1162,rgmPct:70},
+  {date:'06-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'ON',brand:'ARLA',dept:'DAIRY',subclass:'DELI CHEESE',article:'FS ARLA MOZZARELLA 200GM',netSales:-620,cogs:-299,rgm:-321,rgmPct:52},
+  {date:'06-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'MUSHROOM',article:'CREMINI MUSHROOM',netSales:-200,cogs:-110,rgm:-90,rgmPct:45},
+  {date:'06-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC VEGETABLES',article:'FS YELLOW LEMFS IMP 250G',netSales:-450,cogs:-87.5,rgm:-362.5,rgmPct:81},
+  {date:'06-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'POTATO & SWEET POTATO',article:'FS SWEET POTATO 1KG',netSales:-100,cogs:-70,rgm:-30,rgmPct:30},
+  {date:'06-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CITRUS',article:'FS ORGANIC SWEET LIME 500G',netSales:-80,cogs:-40,rgm:-40,rgmPct:50},
+  {date:'06-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GREEN VEGGIES',article:'LADYFINGER 500 GM',netSales:-60,cogs:-42.5,rgm:-17.5,rgmPct:29},
+  {date:'07-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'STONE FRUITS',article:'CHERRY IMP',netSales:-4140,cogs:-3105,rgm:-1035,rgmPct:25},
+  {date:'07-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GUAVA',article:'RED GUAVA PERU',netSales:-126,cogs:-87.5,rgm:-38.5,rgmPct:31},
+  {date:'07-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'MANGO',article:'BANGANAPALLI MANGO 500 GM',netSales:-570,cogs:-285,rgm:-285,rgmPct:50},
+  {date:'08-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC VEGETABLES',article:'SWEET CORN DOUBLE COB BOILED',netSales:-220,cogs:-148.4,rgm:-71.6,rgmPct:33},
+  {date:'09-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GUAVA',article:'RED GUAVA PERU 1 KG',netSales:-360,cogs:-250,rgm:-110,rgmPct:31},
+  {date:'09-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC VEGETABLES',article:'ORGANIC BROCCOLI 300 GM',netSales:-90,cogs:-60,rgm:-30,rgmPct:33},
+  {date:'09-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'ON',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GREEN VEGGIES',article:'ORGANIC WHITE CUCUMBER 1 KG',netSales:-100,cogs:-35,rgm:-65,rgmPct:65},
+  {date:'09-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GREEN VEGGIES',article:'EUROPEAN CUCUMBER SEEDLESS',netSales:-26.7,cogs:-20.03,rgm:-6.67,rgmPct:25},
+  {date:'09-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'SN MARINE',dept:'NON-VEG',subclass:'FISH & SEAFOOD',article:'SN WHITE PEELED PRAWNS LS',netSales:-642,cogs:0,rgm:-642,rgmPct:100},
+  {date:'09-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'FLUXDEMO',dept:'DAIRY',subclass:'PACKED CHEESE',article:'FS MALAI PANEER LS',netSales:-199.84,cogs:-127.29,rgm:-72.55,rgmPct:36},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'BLUEBERRY 125GM',netSales:-400,cogs:-185,rgm:-215,rgmPct:54},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CITRUS',article:'ORANGE NAGPUR 500 GM',netSales:-115,cogs:-80,rgm:-35,rgmPct:30},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'OTHER FRUITS',article:'FS MUD APPLE 1KG',netSales:-160,cogs:-90,rgm:-70,rgmPct:44},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GUAVA',article:'ORGANIC GUAVA 500 GM',netSales:-90,cogs:-60,rgm:-30,rgmPct:33},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CUT RANGE',article:'HONEYDEW HALVES',netSales:-100,cogs:-55.23,rgm:-44.77,rgmPct:45},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'HASS AVOCADO',netSales:-800,cogs:-360,rgm:-440,rgmPct:55},
+  {date:'10-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'FS PASSION FRUIT INDIAN 500G',netSales:-500,cogs:-325,rgm:-175,rgmPct:35},
+  {date:'10-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'PERSIMMON',netSales:-1650,cogs:-1155,rgm:-495,rgmPct:30},
+  {date:'10-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'HASS AVOCADO',netSales:-800,cogs:-359.8,rgm:-440.2,rgmPct:55},
+  {date:'11-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'OLD FASHIONED GOURMET',dept:'PROCESSED FOODS',subclass:'HEAT & EAT',article:'OLD FASHIONED G AALOO PAPAD 500G',netSales:-550,cogs:-357.5,rgm:-192.5,rgmPct:35},
+  {date:'12-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'ON',brand:'GOBBLERIGHT',dept:'LIVE KITCHEN RETAIL',subclass:'BREADS',article:'GOBBLERIGHT BEETROOT QUINOA WRPS',netSales:-2225,cogs:-1446.25,rgm:-778.75,rgmPct:35},
+  {date:'12-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'ON',brand:'GOBBLERIGHT',dept:'LIVE KITCHEN RETAIL',subclass:'BREADS',article:'GOBBLERIGHT SPINACH QUINOA WRAPS',netSales:-440,cogs:-286,rgm:-154,rgmPct:35},
+  {date:'12-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'ROLI BOOKS',dept:'GM',subclass:'BOOKS',article:'THE BOOK OF PASTA',netSales:-4191,cogs:-2723.83,rgm:-1467.17,rgmPct:35},
+  {date:'12-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC VEGETABLES',article:'CELERY STICKS',netSales:-1557.5,cogs:-1112.49,rgm:-445.01,rgmPct:29},
+  {date:'12-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'CHILLIES',article:'RED JALAPENO',netSales:-931,cogs:-661.5,rgm:-269.5,rgmPct:29},
+  {date:'12-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'FLUXDEMO',dept:'NON-VEG',subclass:'POULTRY AND EGGS',article:'Chicken Whole Without Skin',netSales:-310,cogs:-239.91,rgm:-70.09,rgmPct:23},
+  {date:'12-Apr',city:'BANGALORE',region:'29',store:'FLUXDEMO PRESTIGE STERLING',channel:'FD',brand:'M ASIF TRADERS',dept:'NON-VEG',subclass:'RED MEAT',article:'FS MUTTON CURRY CUT 400GM',netSales:-675,cogs:0,rgm:-675,rgmPct:100},
+  {date:'13-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'ANCHOR',dept:'DAIRY',subclass:'MILK',article:'ANCHOR UHT WHIPPING CREAM TP 1LTR',netSales:-1050,cogs:-747.5,rgm:-302.5,rgmPct:29},
+  {date:'13-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'POTATO & SWEET POTATO',article:'FS ORANGE SWEET POTATO 1KG',netSales:-2200,cogs:-1399.69,rgm:-800.31,rgmPct:36},
+  {date:'13-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'POTATO & SWEET POTATO',article:'FS PURPLE SWEET POTATO 1KG',netSales:-2200,cogs:-1400,rgm:-800,rgmPct:36},
+  {date:'13-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'APPLE',article:'ORGANIC APPLE 1 KG',netSales:-350,cogs:-260,rgm:-90,rgmPct:26},
+  {date:'13-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GRAPES',article:'FS RED GLOBE GRAPES 500G',netSales:-250,cogs:-211.43,rgm:-38.57,rgmPct:15},
+  {date:'13-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'MANGO',article:'FS ORG ALPHONSO MANGO 6Pc',netSales:-1500,cogs:0,rgm:-1500,rgmPct:100},
+  {date:'13-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'PEE WEE HASS AVOCADO 500G',netSales:-500,cogs:-275,rgm:-225,rgmPct:45},
+  {date:'13-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'HASS RIPE AVOCADO',netSales:-800,cogs:-400,rgm:-400,rgmPct:50},
+  {date:'13-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'HASS AVOCADO',netSales:-800,cogs:-360,rgm:-440,rgmPct:55},
+  {date:'14-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GREEN VEGGIES',article:'FS ORANGE CARROT 500G',netSales:-70,cogs:-50,rgm:-20,rgmPct:29},
+  {date:'14-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'BLUEBERRY 125GM',netSales:-800,cogs:-390,rgm:-410,rgmPct:51},
+  {date:'14-Apr',city:'GURGAON',region:'06',store:'FSDS UDYOG VIHAR',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'STONE FRUITS',article:'FS MANGOSTEEN 500G',netSales:-800,cogs:-409.39,rgm:-390.61,rgmPct:49},
+  {date:'14-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'KEGGS',dept:'NON-VEG',subclass:'POULTRY AND EGGS',article:'KEGGS CAGE FREE BROWN EGGS',netSales:-150,cogs:-123,rgm:-27,rgmPct:18},
+  {date:'14-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GRAPES',article:'FS BLACK SEEDLESS GRAPES 250G',netSales:-450,cogs:-275,rgm:-175,rgmPct:39},
+  {date:'14-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'ON',brand:'UPF',dept:'NON-VEG',subclass:'POULTRY AND EGGS',article:'UPF HEALTHY EGGS DAILY 6 PC',netSales:-297,cogs:-222.75,rgm:-74.25,rgmPct:25},
+  {date:'14-Apr',city:'New Delhi',region:'07',store:'FLUXDEMO VASANTKUNJ',channel:'FD',brand:'ANCHOR',dept:'DAIRY',subclass:'MILK',article:'ANCHOR UHT WHIPPING CREAM TP 1LTR',netSales:-1050,cogs:-747.5,rgm:-302.5,rgmPct:29},
+  {date:'15-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GRAPES',article:'RED GLOBE GRAPES',netSales:-313.2,cogs:-243,rgm:-70.2,rgmPct:22},
+  {date:'15-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'GRAPES',article:'BLACK GRAPES',netSales:-22,cogs:-11,rgm:-11,rgmPct:50},
+  {date:'15-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'EXOTIC FRUITS',article:'BLUEBERRY 125GM',netSales:-400,cogs:-240,rgm:-160,rgmPct:40},
+  {date:'15-Apr',city:'Hyderabad',region:'36',store:'FLUXDEMO BANJARA HILLS',channel:'FD',brand:'FLUXDEMO',dept:'FRUITS & VEGETABLES',subclass:'SALAD & MICROGREENS',article:'EDIBLE FLOWER',netSales:-300,cogs:-200,rgm:-100,rgmPct:33},
+];
+
+let filteredData = [...RAW];
+let mapMetric = 'value';
+
+// ══════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════
+const abs = v => Math.abs(v);
+const fmt = v => '₹' + abs(v).toLocaleString('en-IN',{maximumFractionDigits:0});
+const fmtK = v => abs(v) >= 1000 ? '₹' + (abs(v)/1000).toFixed(1) + 'K' : fmt(v);
+const fmtPct = v => v.toFixed(1) + '%';
+const COLORS = ['#6c63ff','#ff6b6b','#43e97b','#fa8231','#00b8d4','#fd79a8','#ffeaa7','#a29bfe','#55efc4','#e17055'];
+
+function groupBy(arr, key, sumKey) {
+  const m = {};
+  arr.forEach(r => { const k = r[key]; m[k] = (m[k]||0) + abs(r[sumKey]); });
+  return m;
+}
+function aggBy(arr, key) {
+  const m = {};
+  arr.forEach(r => {
+    if(!m[r[key]]) m[r[key]] = {value:0,cogs:0,rgm:0,count:0};
+    m[r[key]].value += abs(r.netSales);
+    m[r[key]].cogs += abs(r.cogs);
+    m[r[key]].rgm += abs(r.rgm);
+    m[r[key]].count += 1;
+  });
+  return m;
+}
+
+// ══════════════════════════════════════════════════
+//  CHART REGISTRY
+// ══════════════════════════════════════════════════
+const charts = {};
+function destroyChart(id) { if(charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+// ══════════════════════════════════════════════════
+//  RENDER ALL
+// ══════════════════════════════════════════════════
+function renderAll(data) {
+  renderKPIs(data);
+  renderTrendChart(data);
+  renderDeptDonut(data);
+  renderCityBar(data);
+  renderChannelPie(data);
+  renderSubclassBar(data);
+  renderBrandBar(data);
+  renderRGMHist(data);
+  renderTable(data);
+  renderInsights(data);
+}
+
+// ══════════════════════════════════════════════════
+//  KPIs
+// ══════════════════════════════════════════════════
+function renderKPIs(data) {
+  const total = data.reduce((s,r) => s+abs(r.netSales), 0);
+  const avgRGM = data.reduce((s,r) => s+r.rgmPct, 0) / data.length;
+  const online = data.filter(r=>r.channel==='ON').reduce((s,r) => s+abs(r.netSales), 0);
+  const onlinePct = total > 0 ? (online/total*100) : 0;
+  const fv = data.filter(r=>r.dept==='FRUITS & VEGETABLES').reduce((s,r) => s+abs(r.netSales), 0);
+  const fvPct = total > 0 ? (fv/total*100) : 0;
+  animateNumber('kv1', total, v => fmt(v));
+  animateNumber('kv2', data.length, v => Math.round(v));
+  animateNumber('kv3', avgRGM, v => v.toFixed(1)+'%');
+  animateNumber('kv4', total/data.length, v => fmt(v));
+  animateNumber('kv5', onlinePct, v => v.toFixed(0)+'%');
+  document.getElementById('kv6').textContent = 'F&V';
+  document.querySelector('.kpi-card:nth-child(6) .kpi-delta').textContent = '▲ '+fvPct.toFixed(0)+'% of Returns';
+}
+
+function animateNumber(id, target, fmt) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  let start = 0, duration = 900;
+  const step = ts => {
+    if(!start) start = ts;
+    const p = Math.min((ts-start)/duration, 1);
+    const ease = 1 - Math.pow(1-p, 3);
+    el.textContent = fmt(target * ease);
+    if(p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ══════════════════════════════════════════════════
+//  TREND CHART
+// ══════════════════════════════════════════════════
+let trendMode = 'value';
+function renderTrendChart(data) {
+  destroyChart('trend');
+  const byDate = {};
+  data.forEach(r => {
+    if(!byDate[r.date]) byDate[r.date] = {value:0,count:0};
+    byDate[r.date].value += abs(r.netSales);
+    byDate[r.date].count += 1;
+  });
+  const labels = Object.keys(byDate).sort((a,b) => {
+    const months = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+    const [dA,mA] = a.split('-'); const [dB,mB] = b.split('-');
+    return (months[mA]*100+parseInt(dA)) - (months[mB]*100+parseInt(dB));
+  });
+  const values = labels.map(l => trendMode === 'value' ? byDate[l].value : byDate[l].count);
+  const ctx = document.getElementById('trendChart').getContext('2d');
+  const gradient = ctx.createLinearGradient(0,0,0,220);
+  gradient.addColorStop(0,'rgba(108,99,255,0.25)');
+  gradient.addColorStop(1,'rgba(108,99,255,0)');
+  charts['trend'] = new Chart(ctx, {
+    type:'line',
+    data:{labels,datasets:[{label:'Return Value',data:values,borderColor:'#6c63ff',backgroundColor:gradient,borderWidth:2.5,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:'#6c63ff',tension:0.4,fill:true}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#8888a0',bodyColor:'#e8e8f0',callbacks:{label:ctx => trendMode==='value'?fmt(ctx.raw):ctx.raw+' bills'}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:10}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:10},callback:v => trendMode==='value'?fmtK(v):v}}}}
+  });
+}
+
+function switchTrend(mode, btn) {
+  trendMode = mode;
+  document.querySelectorAll('.chart-action-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrendChart(filteredData);
+}
+
+// ══════════════════════════════════════════════════
+//  DEPT DONUT
+// ══════════════════════════════════════════════════
+function renderDeptDonut(data) {
+  destroyChart('deptDonut');
+  const depts = groupBy(data, 'dept', 'netSales');
+  const sorted = Object.entries(depts).sort((a,b) => b[1]-a[1]);
+  const labels = sorted.map(d => d[0]);
+  const values = sorted.map(d => d[1]);
+  const ctx = document.getElementById('deptDonut').getContext('2d');
+  charts['deptDonut'] = new Chart(ctx, {
+    type:'doughnut',
+    data:{labels,datasets:[{data:values,backgroundColor:COLORS,borderColor:'var(--surface)',borderWidth:3,hoverOffset:8}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{display:false},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,titleColor:'#8888a0',bodyColor:'#e8e8f0',callbacks:{label:ctx => ' '+fmt(ctx.raw)+' ('+fmtPct(ctx.raw/values.reduce((a,b)=>a+b,0)*100)+')'}}}},
+  });
+  const legend = document.getElementById('deptLegend');
+  legend.innerHTML = sorted.map((d,i) => `
+    <div class="legend-item">
+      <div class="legend-dot" style="background:${COLORS[i]}"></div>
+      <span>${d[0]} — ${fmtK(d[1])}</span>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  CITY BAR
+// ══════════════════════════════════════════════════
+function renderCityBar(data) {
+  destroyChart('cityBar');
+  const cities = [...new Set(data.map(r => r.city))];
+  const onlineData = cities.map(c => abs(data.filter(r=>r.city===c&&r.channel==='ON').reduce((s,r)=>s+r.netSales,0)));
+  const fdData = cities.map(c => abs(data.filter(r=>r.city===c&&r.channel==='FD').reduce((s,r)=>s+r.netSales,0)));
+  const ctx = document.getElementById('cityBar').getContext('2d');
+  charts['cityBar'] = new Chart(ctx, {
+    type:'bar',
+    data:{labels:cities,datasets:[
+      {label:'Online',data:onlineData,backgroundColor:'rgba(0,184,212,0.8)',borderRadius:4,borderSkipped:false},
+      {label:'Foodstores',data:fdData,backgroundColor:'rgba(108,99,255,0.8)',borderRadius:4,borderSkipped:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8888a0',font:{size:10}}},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyColor:'#e8e8f0',titleColor:'#8888a0',callbacks:{label:ctx=>' '+fmt(ctx.raw)}}},scales:{x:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:10}}},y:{stacked:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:10},callback:fmtK}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  CHANNEL PIE
+// ══════════════════════════════════════════════════
+function renderChannelPie(data) {
+  destroyChart('channelPie');
+  const on = abs(data.filter(r=>r.channel==='ON').reduce((s,r)=>s+r.netSales,0));
+  const fd = abs(data.filter(r=>r.channel==='FD').reduce((s,r)=>s+r.netSales,0));
+  const ctx = document.getElementById('channelPie').getContext('2d');
+  charts['channelPie'] = new Chart(ctx, {
+    type:'doughnut',
+    data:{labels:['Online','Foodstores'],datasets:[{data:[on,fd],backgroundColor:['rgba(0,184,212,0.85)','rgba(108,99,255,0.85)'],borderColor:'var(--surface)',borderWidth:3,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{color:'#8888a0',font:{size:10},padding:12}},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyColor:'#e8e8f0',titleColor:'#8888a0',callbacks:{label:ctx=>' '+fmt(ctx.raw)}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  SUBCLASS BAR
+// ══════════════════════════════════════════════════
+function renderSubclassBar(data) {
+  destroyChart('subclassBar');
+  const sub = groupBy(data, 'subclass', 'netSales');
+  const sorted = Object.entries(sub).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const ctx = document.getElementById('subclassBar').getContext('2d');
+  charts['subclassBar'] = new Chart(ctx, {
+    type:'bar',
+    data:{labels:sorted.map(d=>d[0]),datasets:[{data:sorted.map(d=>d[1]),backgroundColor:sorted.map((_,i)=>COLORS[i%COLORS.length]),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyColor:'#e8e8f0',titleColor:'#8888a0',callbacks:{label:ctx=>' '+fmt(ctx.raw)}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:9},callback:fmtK}},y:{grid:{display:false},ticks:{color:'#8888a0',font:{size:9}}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  BRAND BAR
+// ══════════════════════════════════════════════════
+function renderBrandBar(data) {
+  destroyChart('brandBar');
+  const brands = groupBy(data, 'brand', 'netSales');
+  const sorted = Object.entries(brands).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const ctx = document.getElementById('brandBar').getContext('2d');
+  charts['brandBar'] = new Chart(ctx, {
+    type:'bar',
+    data:{labels:sorted.map(d=>d[0]),datasets:[{data:sorted.map(d=>d[1]),backgroundColor:sorted.map((_,i)=>COLORS[i%COLORS.length]+'cc'),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyColor:'#e8e8f0',titleColor:'#8888a0',callbacks:{label:ctx=>' '+fmt(ctx.raw)}}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:10},callback:fmtK}},y:{grid:{display:false},ticks:{color:'#8888a0',font:{size:10}}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  RGM HISTOGRAM
+// ══════════════════════════════════════════════════
+function renderRGMHist(data) {
+  destroyChart('rgmHist');
+  const bins = [0,10,20,30,40,50,60,70,80,90,100];
+  const counts = new Array(bins.length-1).fill(0);
+  data.forEach(r => { const i = Math.min(Math.floor(r.rgmPct/10), bins.length-2); counts[i]++; });
+  const labels = bins.slice(0,-1).map((b,i) => b+'-'+bins[i+1]+'%');
+  const ctx = document.getElementById('rgmHist').getContext('2d');
+  charts['rgmHist'] = new Chart(ctx, {
+    type:'bar',
+    data:{labels,datasets:[{data:counts,backgroundColor:labels.map((_,i) => {
+      const v = i/bins.length;
+      return `rgba(${Math.round(108+147*v)},${Math.round(99+114*v)},${Math.round(255-125*v)},0.8)`;
+    }),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#17171b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1,bodyColor:'#e8e8f0',titleColor:'#8888a0',callbacks:{label:ctx=>ctx.raw+' SKUs'}}},scales:{x:{grid:{display:false},ticks:{color:'#8888a0',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#8888a0',font:{size:9},stepSize:1}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  TABLE
+// ══════════════════════════════════════════════════
+let tableData = [...RAW];
+let sortKey = null, sortDir = 1;
+
+function renderTable(data) {
+  tableData = data;
+  const tbody = document.getElementById('tableBody');
+  document.getElementById('tableMeta').textContent = data.length + ' records';
+  tbody.innerHTML = data.map(r => {
+    const rgmColor = r.rgmPct > 50 ? '#2ed573' : r.rgmPct > 30 ? '#ffa502' : '#ff4757';
+    const fillPct = Math.min(r.rgmPct, 100);
+    return `<tr>
+      <td class="font-mono">${r.date}</td>
+      <td><span class="tag tag-city">${r.city}</span></td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;font-size:11px">${r.store}</td>
+      <td><span class="tag ${r.channel==='ON'?'tag-online':'tag-fd'}">${r.channel==='ON'?'🌐 Online':'🏪 FD'}</span></td>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;font-size:11px">${r.article}</td>
+      <td style="font-size:11px;color:var(--text-muted)">${r.brand}</td>
+      <td style="font-size:11px;color:var(--text-muted)">${r.dept}</td>
+      <td class="font-mono" style="color:var(--red)">${fmt(r.netSales)}</td>
+      <td class="font-mono" style="color:var(--text-muted)">${r.cogs?fmt(r.cogs):'—'}</td>
+      <td class="font-mono" style="color:var(--accent)">${fmt(r.rgm)}</td>
+      <td>
+        <div class="rgm-bar">
+          <div class="rgm-track"><div class="rgm-fill" style="width:${fillPct}%;background:${rgmColor}"></div></div>
+          <span class="rgm-val font-mono" style="color:${rgmColor}">${r.rgmPct}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(q) {
+  const lq = q.toLowerCase();
+  const filtered = filteredData.filter(r =>
+    r.article.toLowerCase().includes(lq) ||
+    r.city.toLowerCase().includes(lq) ||
+    r.brand.toLowerCase().includes(lq) ||
+    r.dept.toLowerCase().includes(lq) ||
+    r.store.toLowerCase().includes(lq)
+  );
+  renderTable(filtered);
+}
+
+function sortTable(key) {
+  if(sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+  const sorted = [...filteredData].sort((a,b) => {
+    const av = a[key], bv = b[key];
+    if(typeof av === 'number') return (av - bv) * sortDir;
+    return String(av).localeCompare(String(bv)) * sortDir;
+  });
+  renderTable(sorted);
+}
+
+// ══════════════════════════════════════════════════
+//  FILTERS
+// ══════════════════════════════════════════════════
+function filterRegion(region, btn) {
+  document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredData = region === 'ALL' ? [...RAW] : RAW.filter(r => r.region === region);
+  renderAll(filteredData);
+}
+
+// ══════════════════════════════════════════════════
+//  INSIGHTS
+// ══════════════════════════════════════════════════
+function renderInsights(data) {
+  const total = data.reduce((s,r)=>s+abs(r.netSales),0);
+  const avgRGM = data.reduce((s,r)=>s+r.rgmPct,0)/data.length;
+  const topCity = Object.entries(groupBy(data,'city','netSales')).sort((a,b)=>b[1]-a[1])[0];
+  const topArticle = Object.entries(groupBy(data,'article','netSales')).sort((a,b)=>b[1]-a[1])[0];
+  const highRGM = data.filter(r=>r.rgmPct>=70);
+  const lowRGM = data.filter(r=>r.rgmPct<=10);
+  const onlinePct = data.filter(r=>r.channel==='ON').length/data.length*100;
+
+  const insights = [
+    {icon:'🔥',type:'danger',title:'Highest Return City',text:`<span class="insight-highlight">${topCity[0]}</span> leads with <span class="insight-highlight">${fmt(topCity[1])}</span> in return value — focus store-level investigation here first.`},
+    {icon:'💎',type:'success',title:'Top Value Article',text:`<span class="insight-highlight">${topArticle[0]}</span> has the highest single-article return value of <span class="insight-highlight">${fmt(topArticle[1])}</span>.`},
+    {icon:'📈',type:'success',title:'High-Margin Returns',text:`<span class="insight-highlight">${highRGM.length} SKUs</span> were returned with RGM ≥ 70%. These represent retained margin worth investigating for quality issues.`},
+    {icon:'⚠️',type:'warn',title:'Near-Zero Margin SKUs',text:`<span class="insight-highlight">${lowRGM.length} SKUs</span> have RGM ≤ 10%. Review COGS accuracy for ${lowRGM.map(r=>r.article).slice(0,2).join(', ')}.`},
+    {icon:'🌐',type:'',title:'Online Return Share',text:`Online channel accounts for <span class="insight-highlight">${onlinePct.toFixed(0)}%</span> of return transactions. Monitor online fulfillment quality.`},
+    {icon:'🥬',type:'success',title:'F&V Dominates Returns',text:`Fruits & Vegetables comprise the bulk of returns by value. Perishable handling SOPs need review — especially avocado & persimmon.`},
+  ];
+
+  document.getElementById('insightGrid').innerHTML = insights.map(i => `
+    <div class="insight-card ${i.type}">
+      <div class="insight-icon">${i.icon}</div>
+      <div class="insight-title">${i.title}</div>
+      <div class="insight-text">${i.text}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  INDIA MAP (D3 + TopoJSON)
+// ══════════════════════════════════════════════════
+const STATE_DATA = {
+  'Delhi': {region:'07',value:0,count:0,rgm:0,stores:['FLUXDEMO VASANTKUNJ']},
+  'Karnataka': {region:'29',value:0,count:0,rgm:0,stores:['FLUXDEMO PRESTIGE STERLING']},
+  'Telangana': {region:'36',value:0,count:0,rgm:0,stores:['FLUXDEMO BANJARA HILLS']},
+  'Haryana': {region:'06',value:0,count:0,rgm:0,stores:['FSDS UDYOG VIHAR']},
+};
+const REGION_TO_STATE = {'07':'Delhi','29':'Karnataka','36':'Telangana','06':'Haryana'};
+
+RAW.forEach(r => {
+  const sn = REGION_TO_STATE[r.region];
+  if(sn) {
+    STATE_DATA[sn].value += abs(r.netSales);
+    STATE_DATA[sn].count += 1;
+    STATE_DATA[sn].rgm += r.rgmPct;
+  }
+});
+Object.values(STATE_DATA).forEach(s => { if(s.count>0) s.avgRGM = (s.rgm/s.count).toFixed(1); else s.avgRGM=0; });
+
+function switchMapMetric(metric, btn) {
+  mapMetric = metric;
+  document.querySelectorAll('.chart-card:has(#india-map) .chart-action-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateMapColors();
+}
+
+let svgMap, pathsMap;
+
+async function initMap() {
+  const res = await fetch('https://cdn.jsdelivr.net/npm/india-states-topojson@1.0.0/india-states.json').catch(()=>null);
+  if(!res) { drawFallbackMap(); return; }
+  const topo = await res.json().catch(()=>null);
+  if(!topo) { drawFallbackMap(); return; }
+  drawTopoMap(topo);
+}
+
+function drawTopoMap(topo) {
+  const container = document.getElementById('india-map');
+  const w = container.parentElement.clientWidth;
+  const h = 420;
+  svgMap = d3.select('#india-map')
+    .attr('width',w).attr('height',h)
+    .style('background','transparent');
+  const key = Object.keys(topo.objects)[0];
+  const geojson = topojson.feature(topo, topo.objects[key]);
+  const proj = d3.geoMercator().fitSize([w,h], geojson);
+  const path = d3.geoPath().projection(proj);
+
+  const tooltip = document.getElementById('mapTooltip');
+
+  pathsMap = svgMap.selectAll('path')
+    .data(geojson.features)
+    .enter().append('path')
+    .attr('d', path)
+    .attr('stroke','rgba(255,255,255,0.15)')
+    .attr('stroke-width', 0.5)
+    .style('cursor','pointer')
+    .style('transition','fill 0.3s')
+    .on('mousemove', function(event, d) {
+      const sname = d.properties.NAME_1 || d.properties.ST_NM || d.properties.name || d.properties.NAME || '';
+      const sd = findStateData(sname);
+      tooltip.innerHTML = buildTooltip(sname, sd);
+      tooltip.classList.add('visible');
+      tooltip.style.left = (event.clientX + 14) + 'px';
+      tooltip.style.top = (event.clientY - 20) + 'px';
+      d3.select(this).attr('stroke','rgba(255,255,255,0.5)').attr('stroke-width',1.5);
+    })
+    .on('mouseleave', function() {
+      tooltip.classList.remove('visible');
+      d3.select(this).attr('stroke','rgba(255,255,255,0.15)').attr('stroke-width',0.5);
+    });
+
+  updateMapColors();
+  buildMapLegend();
+}
+
+function findStateData(name) {
+  const n = name.toLowerCase();
+  for(const [k,v] of Object.entries(STATE_DATA)) {
+    if(n.includes(k.toLowerCase()) || k.toLowerCase().includes(n)) return {name:k,...v};
+  }
+  return null;
+}
+
+function buildTooltip(sname, sd) {
+  if(!sd || sd.count === 0) return `<div class="tooltip-state">${sname}</div><div style="font-size:11px;color:var(--text-muted)">No return data</div>`;
+  return `
+    <div class="tooltip-state">${sd.name || sname}</div>
+    <div class="tooltip-row"><span class="tooltip-label">Total Returns</span><span class="tooltip-val">${fmt(sd.value)}</span></div>
+    <div class="tooltip-row"><span class="tooltip-label">Transactions</span><span class="tooltip-val">${sd.count}</span></div>
+    <div class="tooltip-row"><span class="tooltip-label">Avg RGM %</span><span class="tooltip-val" style="color:var(--accent)">${sd.avgRGM}%</span></div>
+    <div class="tooltip-row"><span class="tooltip-label">Stores</span><span class="tooltip-val" style="font-size:10px">${sd.stores.join(', ')}</span></div>
+  `;
+}
+
+function updateMapColors() {
+  if(!pathsMap) return;
+  const vals = Object.values(STATE_DATA).map(s => mapMetric==='value'?s.value : mapMetric==='rgm'?parseFloat(s.avgRGM):s.count).filter(v=>v>0);
+  const maxVal = Math.max(...vals);
+  pathsMap.attr('fill', function(d) {
+    const sname = d.properties.NAME_1 || d.properties.ST_NM || d.properties.name || d.properties.NAME || '';
+    const sd = findStateData(sname);
+    if(!sd || sd.count===0) return 'rgba(255,255,255,0.05)';
+    const metric = mapMetric==='value'?sd.value : mapMetric==='rgm'?parseFloat(sd.avgRGM):sd.count;
+    const t = maxVal > 0 ? metric/maxVal : 0;
+    const r = Math.round(108 + 147*t);
+    const g = Math.round(99 + 55*t);
+    const b = Math.round(255 - 100*t);
+    return `rgba(${r},${g},${b},${0.3+t*0.6})`;
+  });
+}
+
+function buildMapLegend() {
+  const bar = document.getElementById('mapLegendBar');
+  const stops = COLORS.slice(0,5).join(',');
+  bar.style.background = `linear-gradient(90deg,rgba(108,99,255,0.3),rgba(255,99,100,0.9))`;
+}
+
+function drawFallbackMap() {
+  const states = [
+    {name:'Delhi',x:320,y:180,r:22,data:STATE_DATA['Delhi']},
+    {name:'Karnataka',x:260,y:340,r:28,data:STATE_DATA['Karnataka']},
+    {name:'Telangana',x:300,y:300,r:26,data:STATE_DATA['Telangana']},
+    {name:'Haryana',x:295,y:165,r:24,data:STATE_DATA['Haryana']},
+  ];
+  const w = document.querySelector('.map-container').clientWidth;
+  const h = 420;
+  svgMap = d3.select('#india-map').attr('width',w).attr('height',h);
+
+  // India outline (simplified)
+  svgMap.append('text').attr('x',w/2).attr('y',h/2).attr('text-anchor','middle')
+    .attr('fill','rgba(255,255,255,0.05)').attr('font-size','120px').text('🇮🇳');
+  svgMap.append('text').attr('x',w/2).attr('y',30).attr('text-anchor','middle')
+    .attr('fill','rgba(136,136,160,0.6)').attr('font-size','12px').text('Interactive TopoJSON map — hover circles for store data');
+
+  const tooltip = document.getElementById('mapTooltip');
+  const groups = svgMap.selectAll('g').data(states).enter().append('g')
+    .style('cursor','pointer');
+
+  groups.append('circle')
+    .attr('cx', d => d.x).attr('cy', d => d.y).attr('r', d => d.r)
+    .attr('fill', (_,i) => COLORS[i]+'99')
+    .attr('stroke', (_,i) => COLORS[i])
+    .attr('stroke-width', 2);
+
+  groups.append('text')
+    .attr('x', d => d.x).attr('y', d => d.y+4)
+    .attr('text-anchor','middle').attr('fill','white')
+    .attr('font-size','9px').attr('font-weight','700')
+    .text(d => d.name);
+
+  groups.append('text')
+    .attr('x', d => d.x).attr('y', d => d.y+16)
+    .attr('text-anchor','middle').attr('fill','rgba(255,255,255,0.7)')
+    .attr('font-size','8px')
+    .text(d => d.data.count > 0 ? fmt(d.data.value) : 'No data');
+
+  groups
+    .on('mousemove', function(event, d) {
+      tooltip.innerHTML = buildTooltip(d.name, {name:d.name,...d.data});
+      tooltip.classList.add('visible');
+      tooltip.style.left = (event.clientX+14)+'px';
+      tooltip.style.top = (event.clientY-20)+'px';
+    })
+    .on('mouseleave', () => tooltip.classList.remove('visible'));
+}
+
+// ══════════════════════════════════════════════════
+//  EXPORT
+// ══════════════════════════════════════════════════
+function exportDashboard() {
+  const rows = [['Date','City','Store','Channel','Article','Brand','Dept','NetSales','COGS','RGM','RGM%']];
+  filteredData.forEach(r => rows.push([r.date,r.city,r.store,r.channel,r.article,r.brand,r.dept,abs(r.netSales),abs(r.cogs),abs(r.rgm),r.rgmPct]));
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'FLUXDEMO_returns_apr2026.csv';
+  a.click();
+}
+
+// ══════════════════════════════════════════════════
+//  THEME TOGGLE
+// ══════════════════════════════════════════════════
+(function(){
+  const t = document.querySelector('[data-theme-toggle]');
+  const r = document.documentElement;
+  let d = 'dark';
+  t && t.addEventListener('click', () => {
+    d = d === 'dark' ? 'light' : 'dark';
+    r.setAttribute('data-theme', d);
+    t.textContent = d === 'dark' ? '☀ Light' : '🌙 Dark';
+  });
+})();
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.color = '#8888a0';
+  renderAll(RAW);
+  initMap();
+});
+</script>
+</body>
+</html>
