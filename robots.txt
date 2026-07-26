@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /testimonials.html
+
+Sitemap: https://fluxautomations.in/sitemap.xml

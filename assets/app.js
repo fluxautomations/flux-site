@@ -185,17 +185,62 @@
     });
   }
 
-  /* ---------- contact form (no backend; mailto fallback) ---------- */
+  /* ---------- audit request form (no backend) ----------
+     The primary channels are WhatsApp and phone. This form is the typed fallback:
+     it validates, builds one message, then lets the visitor choose how it is sent.
+     A bare mailto: redirect fails silently on devices with no mail client, so the
+     send step is never automatic.                                                  */
   var form = document.querySelector("[data-contact]");
   if (form) {
+    var WA_NUMBER = "919136945821";
+    var MAIL_TO = "info@fluxautomations.in";
     var sendBtn = form.querySelector("[data-send]");
-    sendBtn.addEventListener("click", function () {
-      var name = (form.querySelector("#cf-name") || {}).value || "";
-      var email = (form.querySelector("#cf-email") || {}).value || "";
-      var msg = (form.querySelector("#cf-msg") || {}).value || "";
-      var body = encodeURIComponent("Name: " + name + "\nEmail: " + email + "\n\n" + msg);
-      var sub = encodeURIComponent("Project enquiry — Flux Automations");
-      window.location.href = "mailto:info@fluxautomations.in?subject=" + sub + "&body=" + body;
+    var statusEl = form.querySelector("[data-status]");
+    var doneEl = form.querySelector("[data-done]");
+    var waLink = form.querySelector("[data-wa]");
+    var mailLink = form.querySelector("[data-mail]");
+
+    var val = function (sel) {
+      var el = form.querySelector(sel);
+      return el ? String(el.value || "").trim() : "";
+    };
+
+    if (sendBtn) sendBtn.addEventListener("click", function () {
+      var name = val("#cf-name");
+      var company = val("#cf-company");
+      var mobile = val("#cf-mobile");
+      var email = val("#cf-email");
+      var invoices = val("#cf-invoices");
+      var team = val("#cf-team");
+      var notes = val("#cf-notes");
+
+      if (!name) { if (statusEl) statusEl.textContent = "Please add your name."; return; }
+      if (!mobile && !email) { if (statusEl) statusEl.textContent = "Please add a mobile number or an email address."; return; }
+      if (email && email.indexOf("@") < 1) { if (statusEl) statusEl.textContent = "That email address doesn't look right."; return; }
+
+      var lines = [
+        "Back-Office Time Audit request",
+        "",
+        "Name: " + name,
+        "Company: " + (company || "—"),
+        "Mobile: " + (mobile || "—"),
+        "Email: " + (email || "—"),
+        "Purchase invoices a month: " + (invoices || "—"),
+        "People in accounts: " + (team || "—")
+      ];
+      if (notes) { lines.push("", "On Tally today: " + notes); }
+      var text = lines.join("\n");
+
+      if (waLink) waLink.href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
+      if (mailLink) mailLink.href = "mailto:" + MAIL_TO +
+        "?subject=" + encodeURIComponent("Audit request — " + (company || name)) +
+        "&body=" + encodeURIComponent(text);
+
+      if (statusEl) statusEl.textContent = "";
+      if (doneEl) {
+        doneEl.classList.add("show");
+        doneEl.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" });
+      }
     });
   }
 })();

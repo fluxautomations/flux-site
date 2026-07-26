@@ -3,9 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact | Flux Automations</title>
-<meta name="description" content="Get a free automation consultation from Flux Automations. Based in Mumbai, India.">
+<title>Book your free Back-Office Time Audit | Flux Automations</title>
+<meta name="description" content="Book a free 60–90 minute Back-Office Time Audit. We measure what manual work costs you and hand you the written report — yours either way.">
 <meta name="theme-color" content="#0c0d0f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Book your free Back-Office Time Audit | Flux Automations">
+<meta property="og:description" content="We measure what manual work costs you and hand you the written report — yours either way.">
+<meta property="og:image" content="assets/logo.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
@@ -56,10 +61,11 @@
     <nav class="nav-links" aria-label="Primary">
       <a class="nl" href="index.html">Home</a>
       <a class="nl" href="services.html">Services</a>
-      <a class="nl" href="work.html">Our Work</a>
+      <a class="nl" href="work.html">Case Studies</a>
+      <a class="nl" href="pricing.html">Pricing</a>
+      <a class="nl" href="guarantee.html">Guarantee</a>
       <a class="nl" href="about.html">About</a>
-      <a class="nl" href="testimonials.html">Testimonials</a>
-      <a class="btn btn-primary" data-magnetic href="contact.html">Get a Consultation</a>
+      <a class="btn btn-primary" data-magnetic href="contact.html">Book the free audit</a>
     </nav>
   </div>
 </header>
@@ -67,27 +73,103 @@
 <main id="main">
   <section class="page-hero">
     <div class="container">
-      <span class="eyebrow" data-reveal>Let's talk</span>
-      <h1 data-reveal>Get a <span class="grad-text">free consultation</span></h1>
-      <p class="lede" data-reveal>Tell us what's eating your team's time. We'll tell you what we can automate.</p>
+      <span class="eyebrow" data-reveal>Free &middot; 60&ndash;90 minutes &middot; at your office</span>
+      <h1 data-reveal>Book your free <span class="grad-text">Back-Office Time Audit</span></h1>
+      <p class="lede" data-reveal>We spend 60&ndash;90 minutes in your accounts department, measure how many hours go into manual work, and price those hours at your own salary cost. You get a 2&ndash;3 page Manual Hours Report: what it&rsquo;s costing you per year, the two or three automations that recover most of it, and the payback period. The report is yours whether or not you work with us.</p>
     </div>
   </section>
+
   <section class="section" style="padding-top:1rem">
     <div class="container contact-grid">
+
       <div class="glass tilt" style="padding:2.2rem" data-reveal data-contact>
         <span class="spot"></span>
+
+        <div class="contact-actions">
+          <a class="big-action" href="https://wa.me/919136945821?text=I%27d%20like%20to%20book%20the%20free%20Back-Office%20Time%20Audit.">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg></span>
+            <span><b>WhatsApp us</b><span>Two lines is enough. We&rsquo;ll reply with a time.</span></span>
+          </a>
+          <a class="big-action" href="tel:+919136945821">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg></span>
+            <span><b>Call +91 9136945821</b><span>Rahul picks up. Ask anything.</span></span>
+          </a>
+        </div>
+
+        <p class="form-divider">Prefer to type? Fill this in</p>
+
         <div class="field"><label for="cf-name">Name</label><input id="cf-name" type="text" placeholder="Your name"></div>
-        <div class="field"><label for="cf-email">Email</label><input id="cf-email" type="email" placeholder="you@company.com"></div>
-        <div class="field"><label for="cf-msg">What would you like to automate?</label><textarea id="cf-msg" placeholder="e.g. vendor invoice processing, AR follow-ups, payout files..."></textarea></div>
-        <button class="btn btn-primary" data-magnetic data-send type="button">Send enquiry <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="field"><label for="cf-company">Company</label><input id="cf-company" type="text" placeholder="Company name"></div>
+        <div class="field-row">
+          <div class="field"><label for="cf-mobile">Mobile (WhatsApp)</label><input id="cf-mobile" type="tel" placeholder="+91"></div>
+          <div class="field"><label for="cf-email">Email</label><input id="cf-email" type="email" placeholder="you@company.com"></div>
+        </div>
+        <div class="field">
+          <label for="cf-invoices">Roughly how many purchase invoices a month?</label>
+          <select id="cf-invoices">
+            <option value="">Select</option>
+            <option>Under 100</option>
+            <option>100&ndash;300</option>
+            <option>300&ndash;1000</option>
+            <option>1000+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cf-team">How many people work in accounts?</label>
+          <select id="cf-team">
+            <option value="">Select</option>
+            <option>1&ndash;2</option>
+            <option>3&ndash;5</option>
+            <option>6&ndash;15</option>
+            <option>15+</option>
+          </select>
+        </div>
+        <div class="field"><label for="cf-notes">What&rsquo;s on Tally today? (optional)</label><textarea id="cf-notes" placeholder="e.g. purchase entries, bank recon, payment advices — whoever types them"></textarea></div>
+
+        <button class="btn btn-primary" data-magnetic data-send type="button">Request the audit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="form-status" data-status role="status"></p>
+
+        <div class="form-done" data-done>
+          <p style="color:var(--cream);margin-bottom:1rem">Ready to send. Pick how you&rsquo;d like it to reach us:</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" data-wa href="#">Send on WhatsApp</a>
+            <a class="btn btn-ghost" data-mail href="#">Send by email</a>
+          </div>
+        </div>
       </div>
-      <div class="glass tilt contact-card" data-reveal data-delay="1">
-        <span class="spot"></span>
-        <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span><div class="ct"><b>Email</b><span>info@fluxautomations.in</span></div></div>
-        <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div class="ct"><b>Based in</b><span>Mumbai, Maharashtra, India</span></div></div>
-        <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div class="ct"><b>Contact Number</b><span>+91 9136945821</span></div></div>
-        <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg></span><div class="ct"><b>Works with</b><span>Tally · SAP · Dynamics 365</span></div></div>
+
+      <div>
+        <div class="glass tilt contact-card" data-reveal data-delay="1">
+          <span class="spot"></span>
+          <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></span><div class="ct"><b>Email</b><span><a href="mailto:info@fluxautomations.in">info@fluxautomations.in</a></span></div></div>
+          <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div class="ct"><b>Based in</b><span>Nerul, Navi Mumbai &mdash; we work across Navi Mumbai and Thane</span></div></div>
+          <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div class="ct"><b>Contact Number</b><span><a href="tel:+919136945821">+91 9136945821</a></span></div></div>
+          <div class="contact-line"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/></svg></span><div class="ct"><b>Works with</b><span>Tally &middot; SAP &middot; Dynamics 365</span></div></div>
+        </div>
+
+        <div class="glass tilt" style="padding:2.2rem;margin-top:1.6rem" data-reveal data-delay="2">
+          <span class="spot"></span>
+          <span class="eyebrow">The audit</span>
+          <h2 style="font-size:1.5rem;margin-bottom:1.2rem">What actually happens</h2>
+          <ul class="prose-list" style="display:flex;flex-direction:column;gap:.7rem">
+            <li class="stake">We talk to whoever runs accounts first, then the owner.</li>
+            <li class="stake">We list the tasks, the hours, and what they cost at loaded salary.</li>
+            <li class="stake">We take five of your real invoices and process them in front of you.</li>
+            <li class="stake">We don&rsquo;t pitch anything in that meeting.</li>
+            <li class="stake">You get the report. Then we agree a fixed time to walk you through it.</li>
+          </ul>
+        </div>
+
+        <div class="glass tilt" style="padding:2.2rem;margin-top:1.6rem" data-reveal data-delay="3">
+          <span class="spot"></span>
+          <h2 style="font-size:1.3rem;margin-bottom:.7rem">Not ready for a visit?</h2>
+          <p>Answer twelve questions and get a 0&ndash;100 Manual Work Score plus an estimate of what manual work is costing you per year.</p>
+          <div class="cta-row" style="margin-top:1.2rem">
+            <a class="btn btn-ghost" data-magnetic href="manual-work-score.html">Take the Manual Work Score <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
       </div>
+
     </div>
   </section>
 </main>
@@ -108,15 +190,23 @@
       </a>
       <nav class="footer-links" aria-label="Footer">
         <a href="services.html">Services</a>
-        <a href="work.html">Our Work</a>
+        <a href="work.html">Case Studies</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="guarantee.html">Guarantee</a>
         <a href="about.html">About</a>
-        <a href="testimonials.html">Testimonials</a>
         <a href="contact.html">Contact</a>
       </nav>
     </div>
-    <p class="footer-copy">&copy; 2026 Flux Automations. Proprietor: Rahul Wagh. All rights reserved. &middot; Mumbai, India</p>
+    <p class="footer-mantra">Our fee is always less than the savings we document. In writing.</p>
+    <p class="footer-copy">&copy; 2026 Flux Automations. Proprietor: Rahul Wagh. All rights reserved. &middot; Nerul, Navi Mumbai &middot; <a href="tel:+919136945821">+91 9136945821</a> &middot; <a href="mailto:info@fluxautomations.in">info@fluxautomations.in</a></p>
   </div>
 </footer>
+
+<div class="stickybar">
+  <a class="sb-btn sb-wa" href="https://wa.me/919136945821?text=I%27d%20like%20to%20book%20the%20free%20Back-Office%20Time%20Audit."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a>
+  <a class="sb-btn sb-call" href="tel:+919136945821"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg> Call</a>
+</div>
+
 <script src="assets/app.js"></script>
 </body>
 </html>

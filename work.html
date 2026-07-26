@@ -3,9 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Our Work | Flux Automations</title>
-<meta name="description" content="Real automation case studies — AR follow-up engines, AI invoice bots, payout dashboards, intelligence hubs and browser automation.">
+<title>Case studies &mdash; hours and rupees recovered | Flux Automations</title>
+<meta name="description" content="Invoice capture, payouts and dashboards built for Navi Mumbai SMEs — running on their own machines, documented, trained, handed over.">
 <meta name="theme-color" content="#0c0d0f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Case studies | Flux Automations">
+<meta property="og:description" content="Invoice capture, payouts and dashboards built for Navi Mumbai SMEs — running on their own machines.">
+<meta property="og:image" content="assets/logo.png">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
@@ -56,10 +61,11 @@
     <nav class="nav-links" aria-label="Primary">
       <a class="nl" href="index.html">Home</a>
       <a class="nl" href="services.html">Services</a>
-      <a class="nl" href="work.html">Our Work</a>
+      <a class="nl" href="work.html">Case Studies</a>
+      <a class="nl" href="pricing.html">Pricing</a>
+      <a class="nl" href="guarantee.html">Guarantee</a>
       <a class="nl" href="about.html">About</a>
-      <a class="nl" href="testimonials.html">Testimonials</a>
-      <a class="btn btn-primary" data-magnetic href="contact.html">Get a Consultation</a>
+      <a class="btn btn-primary" data-magnetic href="contact.html">Book the free audit</a>
     </nav>
   </div>
 </header>
@@ -69,73 +75,95 @@
     <div class="container">
       <span class="eyebrow" data-reveal>Case studies</span>
       <h1 data-reveal>Real work, <span class="grad-text">real time saved</span></h1>
-      <p class="lede" data-reveal>A look at systems we've built — what was broken, and exactly how we fixed it.</p>
+      <p class="lede" data-reveal>What was broken, and exactly what we built. Every system below runs on the client&rsquo;s own machines &mdash; documented, trained, handed over.</p>
     </div>
   </section>
+
   <section class="section" style="padding-top:1rem">
     <div class="container">
-      <div class="work-list"><article class="glass tilt work-card" data-reveal>
+      <div class="work-list">
+
+        <article class="glass tilt work-card" data-reveal>
           <span class="spot"></span>
           <div class="idx">01</div>
           <div>
-            <div class="work-tags"><span class="chip">Accounts Receivable</span><span class="chip">Tally XML</span><span class="chip">Outlook</span></div>
-            <h3>Intelligent AR & follow-up engine</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Tracking aging bills, matching them against client ledgers, and manually sending follow-up emails was time-consuming and prone to human error.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>An automated pipeline extracts real-time Bills Receivable data from Tally, builds aging buckets, generates an interactive Excel dashboard with forecast charts, and dispatches personalized follow-up emails via Outlook.</p></div>
-            
+            <div class="work-tags"><span class="chip">Invoice capture</span><span class="chip">OCR</span><span class="chip">Tally</span><span class="chip">Runs on your server</span></div>
+            <h3>Invoice capture engine</h3>
+            <div class="work-block"><span class="k">The problem</span><p>Processing vendor invoices from WhatsApp, Telegram or email meant opening PDFs, reading unstructured formats, and typing data into an Excel log by hand.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>Forward an invoice image or PDF and within seconds it extracts vendor, date, GST amount, category and total &mdash; logging it into a master sheet and posting the entry to the ERP on command.</p></div>
+            <div class="work-block"><span class="k">The handover</span><p>Documentation, operator training and certification, full source code. Runs entirely on the client&rsquo;s own hardware.</p></div>
+            <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
-        </article><article class="glass tilt work-card" data-reveal>
+        </article>
+
+        <article class="glass tilt work-card" data-reveal>
           <span class="spot"></span>
           <div class="idx">02</div>
           <div>
-            <div class="work-tags"><span class="chip">AI / ML</span><span class="chip">Telegram Bot</span><span class="chip">OCR</span></div>
-            <h3>AI-powered invoice processor bot</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Processing vendor invoices from WhatsApp, Telegram or email meant opening PDFs, reading unstructured formats, and typing data into an Excel log by hand.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>A custom Telegram bot powered by smart AI OCR: forward an invoice image or PDF and within seconds it extracts vendor, date, GST amount, category and total — logging it into a master sheet and posting the entry to your ERP on command.</p></div>
-            
+            <div class="work-tags"><span class="chip">Accounts Payable</span><span class="chip">Bank Integration</span><span class="chip">Streamlit App</span><span class="chip">Runs on your server</span></div>
+            <h3>End-to-end automated payouts dashboard</h3>
+            <div class="work-block"><span class="k">The problem</span><p>Managing vendor payouts meant checking Tally for outstanding bills, formatting bank upload files (NEFT/RTGS), and manually emailing payment advice to every vendor.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>A secure local web dashboard ingests payout inputs, fuzzy-matches the right vendor, allocates payments to outstanding bills on a FIFO basis, pushes the transaction back to the ERP, generates bank-ready files, and bulk-sends payment advice emails.</p></div>
+            <div class="work-block"><span class="k">The handover</span><p>Deployed inside the client&rsquo;s network. No payout data leaves the premises. Documentation, training and source code handed over.</p></div>
+            <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
-        </article><article class="glass tilt work-card" data-reveal>
+        </article>
+
+        <article class="glass tilt work-card" data-reveal>
           <span class="spot"></span>
           <div class="idx">03</div>
           <div>
-            <div class="work-tags"><span class="chip">Streamlit App</span><span class="chip">Accounts Payable</span><span class="chip">Bank Integration</span></div>
-            <h3>End-to-end automated payouts dashboard</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Managing vendor payouts meant checking Tally for outstanding bills, formatting bank upload files (NEFT/RTGS), and manually emailing payment advice to every vendor.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>A secure local web dashboard ingests payout inputs, uses AI fuzzy-matching to find the right vendor, allocates payments to outstanding bills on a FIFO basis, pushes the transaction back to your ERP, generates bank-ready files, and bulk-sends payment advice emails.</p></div>
-            
+            <div class="work-tags"><span class="chip">Dashboards</span><span class="chip">Web App</span><span class="chip">Scheduled refresh</span></div>
+            <h3>A dashboard that behaves like an intelligence hub</h3>
+            <div class="work-block"><span class="k">The problem</span><p>Standard ERP reports rarely show what a business actually needs to see. Aging spikes, margin dips and duplicate vendor entries only surface when someone goes looking.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>Customised, visually rich dashboards that surface real trends and meaningful insights &mdash; pulled directly from the ERP and refreshed on a scheduled frequency.</p></div>
+            <div class="work-block"><span class="k">The handover</span><p>Runs on the client&rsquo;s own server, reviewed in a fixed 20-minute monthly session with the owner.</p></div>
+            <a class="demo" href="dashboarddemo.html">See live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <br><span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
-        </article><article class="glass tilt work-card" data-reveal>
+        </article>
+
+        <article class="glass tilt work-card" data-reveal>
           <span class="spot"></span>
           <div class="idx">04</div>
           <div>
-            <div class="work-tags"><span class="chip">Dashboards</span><span class="chip">Web App</span><span class="chip">AI Insights</span></div>
-            <h3>A dashboard that behaves like an intelligence hub</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Standard ERP reports rarely show what a business actually needs to see.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>We build customized, visually rich dashboards that surface real trends and meaningful insights — pulled directly from the ERP and refreshed on a scheduled frequency.</p></div>
-            <a class="demo" href="dashboarddemo.html">See live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <div class="work-tags"><span class="chip">Accounts Receivable</span><span class="chip">Tally XML</span><span class="chip">Outlook</span></div>
+            <h3>Intelligent AR &amp; follow-up engine</h3>
+            <div class="work-block"><span class="k">The problem</span><p>Tracking aging bills, matching them against client ledgers, and manually sending follow-up emails was time-consuming and prone to human error.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>An automated pipeline extracts real-time Bills Receivable data from Tally, builds aging buckets, generates an interactive Excel dashboard with forecast charts, and dispatches personalised follow-up emails via Outlook.</p></div>
+            <div class="work-block"><span class="k">The handover</span><p>Runs on the client&rsquo;s machine on a schedule. Documented, trained, owned by the client.</p></div>
+            <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
-        </article><article class="glass tilt work-card" data-reveal>
+        </article>
+
+        <article class="glass tilt work-card" data-reveal>
           <span class="spot"></span>
           <div class="idx">05</div>
           <div>
             <div class="work-tags"><span class="chip">Browser Automations</span><span class="chip">Playwright</span><span class="chip">No API Needed</span></div>
             <h3>Browser automation without API access</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Many portals — government sites, vendor dashboards, legacy ERP interfaces — offer no API. Repetitive tasks had to be done manually, browser tab by browser tab.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>Using Playwright and Selenium, we automate the browser itself — logging in, navigating pages, filling forms, clicking buttons, and extracting data exactly as a human would, but on a schedule and at scale. If you can do it in a browser, we can automate it.</p></div>
-            
+            <div class="work-block"><span class="k">The problem</span><p>Many portals &mdash; government sites, vendor dashboards, legacy ERP interfaces &mdash; offer no API. Repetitive tasks had to be done manually, browser tab by browser tab.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>Using Playwright and Selenium, we automate the browser itself &mdash; logging in, navigating pages, filling forms, clicking buttons, and extracting data exactly as a human would, but on a schedule and at scale. If you can do it in a browser, we can automate it.</p></div>
+            <div class="work-block"><span class="k">The handover</span><p>Scripts, credentials handling and documentation stay on the client&rsquo;s own machine.</p></div>
+            <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
-        </article></div>
+        </article>
+
+      </div>
     </div>
   </section>
-  
+
 <section class="section">
   <div class="container">
     <div class="glass tilt cta-strip" data-reveal>
       <span class="spot"></span>
-      <span class="eyebrow">Ready when you are</span>
-      <h2>Ready to automate the <span class="grad-text">busywork?</span></h2>
-      <p>Let's talk about how many hours we can save your team this month.</p>
-      <a class="btn btn-primary" data-magnetic href="contact.html">Get a Free Consultation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <span class="eyebrow">Free &middot; 60&ndash;90 minutes &middot; on-site</span>
+      <h2>Find out what manual work is <span class="grad-text">actually costing you</span></h2>
+      <p>The Back-Office Time Audit measures the hours your team spends retyping data, prices them at your own salary cost, and hands you a written number. You keep the report whether or not you work with us.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" data-magnetic href="contact.html">Book the free audit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" data-magnetic href="manual-work-score.html">Or take the Manual Work Score</a>
+      </div>
     </div>
   </div>
 </section>
@@ -158,15 +186,23 @@
       </a>
       <nav class="footer-links" aria-label="Footer">
         <a href="services.html">Services</a>
-        <a href="work.html">Our Work</a>
+        <a href="work.html">Case Studies</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="guarantee.html">Guarantee</a>
         <a href="about.html">About</a>
-        <a href="testimonials.html">Testimonials</a>
         <a href="contact.html">Contact</a>
       </nav>
     </div>
-    <p class="footer-copy">&copy; 2026 Flux Automations. Proprietor: Rahul Wagh. All rights reserved. &middot; Mumbai, India</p>
+    <p class="footer-mantra">Our fee is always less than the savings we document. In writing.</p>
+    <p class="footer-copy">&copy; 2026 Flux Automations. Proprietor: Rahul Wagh. All rights reserved. &middot; Nerul, Navi Mumbai &middot; <a href="tel:+919136945821">+91 9136945821</a> &middot; <a href="mailto:info@fluxautomations.in">info@fluxautomations.in</a></p>
   </div>
 </footer>
+
+<div class="stickybar">
+  <a class="sb-btn sb-wa" href="https://wa.me/919136945821?text=I%27d%20like%20to%20book%20the%20free%20Back-Office%20Time%20Audit."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a>
+  <a class="sb-btn sb-call" href="tel:+919136945821"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg> Call</a>
+</div>
+
 <script src="assets/app.js"></script>
 </body>
 </html>

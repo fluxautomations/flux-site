@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Work Score &mdash; what manual work costs your accounts team | Flux Automations</title>
+<meta name="description" content="Twelve questions, three minutes. Get a 0–100 Manual Work Score and an estimate of what manual finance work is costing you per year.">
+<meta name="theme-color" content="#0c0d0f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manual Work Score — 12 questions, 3 minutes">
+<meta property="og:description" content="Get a 0–100 score and an estimate of what manual finance work costs you per year.">
+<meta property="og:image" content="assets/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="fluxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffb238"/>
+      <stop offset="45%" stop-color="#f29a11"/>
+      <stop offset="100%" stop-color="#c97908"/>
+    </linearGradient>
+  </defs>
+</svg>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div id="preloader" aria-hidden="true">
+  <svg class="pre-mark" viewBox="0 0 160 160" role="img" aria-label="Flux loading">
+    <path d="M80 12 L148 80 L80 148 L12 80 Z"></path>
+    <path d="M80 44 L116 80 L80 116 L44 80 Z"></path>
+    <path d="M116 62 L134 80 L116 98 L98 80 Z"></path>
+  </svg>
+</div>
+
+<div class="bg-fx" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <div class="bg-blob b1"></div>
+  <div class="bg-blob b2"></div>
+  <div class="bg-noise"></div>
+</div>
+<canvas id="embers" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" aria-label="Flux Automations home">
+      <svg class="mark-svg" viewBox="0 0 160 160" role="img" aria-label="Flux Automations mark">
+        <rect x="2" y="2" width="156" height="156" rx="34" fill="url(#fluxGrad)"></rect>
+        <g fill="none" stroke="#1a1205" stroke-width="9" stroke-linejoin="miter">
+          <path d="M80 30 L130 80 L80 130 L30 80 Z"></path>
+          <path d="M80 56 L104 80 L80 104 L56 80 Z"></path>
+          <path d="M104 68 L116 80 L104 92 L92 80 Z"></path>
+        </g>
+      </svg>
+      <span class="bn">FLUX <b>AUTOMATIONS</b></span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" aria-label="Primary">
+      <a class="nl" href="index.html">Home</a>
+      <a class="nl" href="services.html">Services</a>
+      <a class="nl" href="work.html">Case Studies</a>
+      <a class="nl" href="pricing.html">Pricing</a>
+      <a class="nl" href="guarantee.html">Guarantee</a>
+      <a class="nl" href="about.html">About</a>
+      <a class="btn btn-primary" data-magnetic href="contact.html">Book the free audit</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero" style="padding-bottom:2rem">
+    <div class="container">
+      <span class="eyebrow" data-reveal>12 questions &middot; 3 minutes &middot; free</span>
+      <h1 data-reveal>Manual <span class="grad-text">Work Score</span></h1>
+      <p class="lede" data-reveal>Answer twelve questions about how your accounts department actually works. You get a 0&ndash;100 score and an estimate of what manual work is costing you per year. No login, nothing to download.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container score-wrap">
+      <div class="glass score-card">
+        <span class="spot"></span>
+
+        <div id="quiz">
+          <div class="score-progress"><i id="bar"></i></div>
+          <span class="score-q" id="qnum">Question 1 of 12</span>
+          <h2 id="qtext">&nbsp;</h2>
+          <div class="score-opts" id="opts"></div>
+          <div class="score-nav">
+            <button class="score-back" id="back" type="button">&larr; Back</button>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="score-result" id="result">
+          <span class="score-q">Your Manual Work Score</span>
+          <div class="score-num" id="scoreNum">0</div>
+          <div class="score-band" id="scoreBand"></div>
+
+          <div class="score-money" id="moneyLine"></div>
+          <p id="moneySub" style="font-size:.92rem"></p>
+
+          <div class="callout" style="text-align:left">
+            <p id="verdict"></p>
+          </div>
+
+          <p style="font-size:.88rem;color:var(--cream-faint);text-align:left">This is an estimate built from your answers, not a measurement. The Back-Office Time Audit measures it properly &mdash; task by task, priced at your team&rsquo;s real salary cost, signed off by you. It&rsquo;s free, takes 60&ndash;90 minutes, and the report is yours whether or not you work with us. If the number turns out to be small, you&rsquo;ve lost 60 minutes.</p>
+
+          <div style="text-align:left;margin-top:2rem">
+            <p class="form-divider">Want the audit? Leave your details</p>
+            <div class="field"><label for="s-name">Name</label><input id="s-name" type="text" placeholder="Your name"></div>
+            <div class="field"><label for="s-company">Company</label><input id="s-company" type="text" placeholder="Company name"></div>
+            <div class="field-row">
+              <div class="field"><label for="s-mobile">Mobile (WhatsApp)</label><input id="s-mobile" type="tel" placeholder="+91"></div>
+              <div class="field"><label for="s-email">Email</label><input id="s-email" type="email" placeholder="you@company.com"></div>
+            </div>
+            <div class="cta-row">
+              <a class="btn btn-primary" id="sendWa" href="#">Send my score on WhatsApp</a>
+              <a class="btn btn-ghost" id="sendMail" href="#">Send by email</a>
+            </div>
+            <p class="form-status" id="sStatus" role="status"></p>
+          </div>
+
+          <div class="cta-row" style="justify-content:flex-start;margin-top:2rem">
+            <a class="btn btn-ghost" href="pricing.html">See what automation costs</a>
+            <button class="score-back" id="restart" type="button">Start again</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <a class="brand" href="index.html">
+        <svg class="mark-svg" viewBox="0 0 160 160" role="img" aria-label="Flux Automations mark">
+        <rect x="2" y="2" width="156" height="156" rx="34" fill="url(#fluxGrad)"></rect>
+        <g fill="none" stroke="#1a1205" stroke-width="9" stroke-linejoin="miter">
+          <path d="M80 30 L130 80 L80 130 L30 80 Z"></path>
+          <path d="M80 56 L104 80 L80 104 L56 80 Z"></path>
+          <path d="M104 68 L116 80 L104 92 L92 80 Z"></path>
+        </g>
+      </svg>
+        <span class="bn">FLUX <b>AUTOMATIONS</b></span>
+      </a>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="services.html">Services</a>
+        <a href="work.html">Case Studies</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="guarantee.html">Guarantee</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+    <p class="footer-mantra">Our fee is always less than the savings we document. In writing.</p>
+    <p class="footer-copy">&copy; 2026 Flux Automations. Proprietor: Rahul Wagh. All rights reserved. &middot; Nerul, Navi Mumbai &middot; <a href="tel:+919136945821">+91 9136945821</a> &middot; <a href="mailto:info@fluxautomations.in">info@fluxautomations.in</a></p>
+  </div>
+</footer>
+
+<div class="stickybar">
+  <a class="sb-btn sb-wa" href="https://wa.me/919136945821?text=I%27d%20like%20to%20book%20the%20free%20Back-Office%20Time%20Audit."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.2A8.5 8.5 0 1 1 21 11.5Z"/></svg> WhatsApp</a>
+  <a class="sb-btn sb-call" href="tel:+919136945821"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg> Call</a>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* Each option: label, p = manual-load points (0-4), h = manual hours/month (where the
+     question measures time), r = loaded monthly cost of one accounts person (last question). */
+  var Q = [
+    { q: "Roughly how many purchase invoices do you process a month?",
+      a: [ {l:"Under 100", p:0}, {l:"100 to 300", p:2}, {l:"300 to 1,000", p:3}, {l:"More than 1,000", p:4} ] },
+
+    { q: "How many people work in your accounts team?",
+      a: [ {l:"1 to 2", p:1}, {l:"3 to 5", p:2}, {l:"6 to 15", p:3}, {l:"More than 15", p:4} ] },
+
+    { q: "Hours a month spent typing purchase invoices into Tally or your ERP?",
+      a: [ {l:"Under 10 hours", p:0, h:5}, {l:"10 to 30 hours", p:2, h:20}, {l:"30 to 80 hours", p:3, h:55}, {l:"More than 80 hours", p:4, h:110} ] },
+
+    { q: "Hours a month on bank reconciliation?",
+      a: [ {l:"Under 5 hours", p:0, h:3}, {l:"5 to 15 hours", p:2, h:10}, {l:"15 to 40 hours", p:3, h:27}, {l:"More than 40 hours", p:4, h:55} ] },
+
+    { q: "How do bank payment files get made?",
+      a: [ {l:"Fully automated from the ERP", p:0}, {l:"Mostly automated, some manual fixes", p:1}, {l:"Built in Excel, then uploaded", p:3}, {l:"Typed into the bank portal by hand", p:4} ] },
+
+    { q: "Hours a month preparing payment advices and vendor emails?",
+      a: [ {l:"Under 5 hours", p:0, h:3}, {l:"5 to 15 hours", p:2, h:10}, {l:"15 to 40 hours", p:3, h:27}, {l:"More than 40 hours", p:4, h:55} ] },
+
+    { q: "Hours a month chasing receivables and sending aging follow-ups?",
+      a: [ {l:"Under 5 hours", p:0, h:3}, {l:"5 to 15 hours", p:2, h:10}, {l:"15 to 40 hours", p:3, h:27}, {l:"More than 40 hours", p:4, h:55} ] },
+
+    { q: "Hours a month on GST return preparation and reconciliation?",
+      a: [ {l:"Under 5 hours", p:0, h:3}, {l:"5 to 20 hours", p:2, h:12}, {l:"20 to 50 hours", p:3, h:35}, {l:"More than 50 hours", p:4, h:70} ] },
+
+    { q: "After month-end, how many days before your MIS is ready?",
+      a: [ {l:"1 to 2 days", p:0}, {l:"3 to 5 days", p:2}, {l:"6 to 10 days", p:3}, {l:"More than 10 days", p:4} ] },
+
+    { q: "Is the same data typed into more than one system?",
+      a: [ {l:"No", p:0}, {l:"Sometimes", p:2}, {l:"Often", p:3}, {l:"Almost always", p:4} ] },
+
+    { q: "If the person who knows the Excel resigned tomorrow, how long to recover?",
+      a: [ {l:"A day &mdash; it&rsquo;s documented", p:0}, {l:"About a week", p:2}, {l:"About a month", p:3}, {l:"Honestly, no idea", p:4} ] },
+
+    { q: "Roughly what does one accounts person cost per month, fully loaded?",
+      a: [ {l:"Under &#8377;25,000", p:0, r:22000}, {l:"&#8377;25,000 to &#8377;40,000", p:1, r:32000}, {l:"&#8377;40,000 to &#8377;60,000", p:2, r:50000}, {l:"More than &#8377;60,000", p:3, r:70000} ] }
+  ];
+
+  var MAX = Q.reduce(function (s, x) {
+    return s + Math.max.apply(null, x.a.map(function (o) { return o.p; }));
+  }, 0);
+  var WORK_HOURS_PER_MONTH = 176; /* 22 days x 8 hours */
+
+  var i = 0, picked = [];
+  var quiz = document.getElementById("quiz");
+  var result = document.getElementById("result");
+  var qnum = document.getElementById("qnum");
+  var qtext = document.getElementById("qtext");
+  var opts = document.getElementById("opts");
+  var bar = document.getElementById("bar");
+  var back = document.getElementById("back");
+
+  function render() {
+    var item = Q[i];
+    qnum.textContent = "Question " + (i + 1) + " of " + Q.length;
+    qtext.innerHTML = item.q;
+    bar.style.width = (i / Q.length * 100) + "%";
+    back.style.visibility = i === 0 ? "hidden" : "visible";
+    opts.innerHTML = "";
+    item.a.forEach(function (o, idx) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "score-opt";
+      b.innerHTML = o.l;
+      if (picked[i] === idx) { b.style.borderColor = "var(--border-amber-hot)"; }
+      b.addEventListener("click", function () {
+        picked[i] = idx;
+        if (i < Q.length - 1) { i++; render(); } else { finish(); }
+      });
+      opts.appendChild(b);
+    });
+  }
+
+  back.addEventListener("click", function () { if (i > 0) { i--; render(); } });
+
+  function fmtINR(n) {
+    /* Indian digit grouping: 12,34,567 */
+    var s = String(Math.round(n));
+    if (s.length <= 3) return "₹" + s;
+    var last3 = s.slice(-3), rest = s.slice(0, -3);
+    return "₹" + rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + "," + last3;
+  }
+
+  var state = {};
+
+  function finish() {
+    var pts = 0, hrs = 0, rate = 0;
+    picked.forEach(function (idx, qi) {
+      var o = Q[qi].a[idx];
+      pts += o.p;
+      if (o.h) hrs += o.h;
+      if (o.r) rate = o.r;
+    });
+
+    var score = Math.round(pts / MAX * 100);
+    var hourly = rate / WORK_HOURS_PER_MONTH;
+    var annual = hrs * 12 * hourly;
+    /* round to the nearest 5,000 so it reads as an estimate, not a measurement */
+    annual = Math.round(annual / 5000) * 5000;
+
+    var band, verdict;
+    if (score <= 30) {
+      band = "Mostly automated already";
+      verdict = "Your back office is in reasonable shape. An audit would probably find one or two workflows worth automating, not a rebuild — and we’d tell you if it isn’t worth the money.";
+    } else if (score <= 55) {
+      band = "Some manual load";
+      verdict = "There is real manual work here, concentrated in a couple of tasks. That is usually a single-workflow job — the kind of thing a Sprint or the Essential package covers.";
+    } else if (score <= 75) {
+      band = "Heavy manual load";
+      verdict = "This is the pattern we see most often: invoices, bank files and follow-ups all being handled by hand, with one person holding the knowledge. Two or three workflows usually recover most of it.";
+    } else {
+      band = "Very heavy manual load";
+      verdict = "Most of your accounts department’s time is going into retyping data that already exists somewhere else, and the process depends on specific people remembering how it works. This is what the audit was built to measure.";
+    }
+
+    state = { score: score, band: band, hrs: hrs, annual: annual };
+
+    document.getElementById("scoreNum").textContent = score;
+    document.getElementById("scoreBand").textContent = band;
+    document.getElementById("verdict").textContent = verdict;
+
+    if (annual > 0 && hrs > 0) {
+      document.getElementById("moneyLine").innerHTML = "Roughly <span class=\"grad-text\">" + fmtINR(annual) + "</span> a year";
+      document.getElementById("moneySub").textContent =
+        "Based on about " + hrs + " hours a month of manual finance work, priced at the salary band you selected.";
+    } else {
+      document.getElementById("moneyLine").textContent = "Not enough manual hours to estimate";
+      document.getElementById("moneySub").textContent = "On your answers, there isn’t much manual time left to recover.";
+    }
+
+    bar.style.width = "100%";
+    quiz.style.display = "none";
+    result.classList.add("show");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function summary() {
+    var name = (document.getElementById("s-name").value || "").trim();
+    var company = (document.getElementById("s-company").value || "").trim();
+    var mobile = (document.getElementById("s-mobile").value || "").trim();
+    var email = (document.getElementById("s-email").value || "").trim();
+    var lines = [
+      "Manual Work Score: " + state.score + "/100 (" + state.band + ")",
+      "Estimated manual hours: " + state.hrs + " per month",
+      "Estimated annual cost: " + fmtINR(state.annual),
+      "",
+      "Name: " + name,
+      "Company: " + company,
+      "Mobile: " + mobile,
+      "Email: " + email,
+      "",
+      "I'd like to book the free Back-Office Time Audit."
+    ];
+    return { text: lines.join("\n"), ok: name && (mobile || email) };
+  }
+
+  document.getElementById("sendWa").addEventListener("click", function (e) {
+    var s = summary();
+    if (!s.ok) { e.preventDefault(); document.getElementById("sStatus").textContent = "Add your name and a mobile or email first."; return; }
+    this.href = "https://wa.me/919136945821?text=" + encodeURIComponent(s.text);
+  });
+
+  document.getElementById("sendMail").addEventListener("click", function (e) {
+    var s = summary();
+    if (!s.ok) { e.preventDefault(); document.getElementById("sStatus").textContent = "Add your name and a mobile or email first."; return; }
+    this.href = "mailto:info@fluxautomations.in?subject=" +
+      encodeURIComponent("Manual Work Score " + state.score + "/100 — audit request") +
+      "&body=" + encodeURIComponent(s.text);
+  });
+
+  document.getElementById("restart").addEventListener("click", function () {
+    i = 0; picked = []; result.classList.remove("show"); quiz.style.display = "block"; render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
