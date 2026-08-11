@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manual Work Score &mdash; what manual work costs your accounts team | Flux Automations</title>
-<meta name="description" content="Twelve questions, three minutes. Get a 0–100 Manual Work Score and an estimate of what manual finance work is costing you per year.">
+<title>Manual Work Score: what manual work costs your accounts team | Flux Automations</title>
+<meta name="description" content="Twelve questions, three minutes. Get a 0 to 100 Manual Work Score and an estimate of what manual finance work is costing you per year.">
 <meta name="theme-color" content="#0c0d0f">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Manual Work Score — 12 questions, 3 minutes">
-<meta property="og:description" content="Get a 0–100 score and an estimate of what manual finance work costs you per year.">
+<meta property="og:title" content="Manual Work Score: 12 questions, 3 minutes">
+<meta property="og:description" content="Get a 0 to 100 score and an estimate of what manual finance work costs you per year.">
 <meta property="og:image" content="assets/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="assets/logo.png">
@@ -62,6 +62,7 @@
       <a class="nl" href="index.html">Home</a>
       <a class="nl" href="services.html">Services</a>
       <a class="nl" href="work.html">Case Studies</a>
+      <a class="nl" href="testimonials.html">Testimonials</a>
       <a class="nl" href="pricing.html">Pricing</a>
       <a class="nl" href="guarantee.html">Guarantee</a>
       <a class="nl" href="about.html">About</a>
@@ -75,7 +76,7 @@
     <div class="container">
       <span class="eyebrow" data-reveal>12 questions &middot; 3 minutes &middot; free</span>
       <h1 data-reveal>Manual <span class="grad-text">Work Score</span></h1>
-      <p class="lede" data-reveal>Answer twelve questions about how your accounts department actually works. You get a 0&ndash;100 score and an estimate of what manual work is costing you per year. No login, nothing to download.</p>
+      <p class="lede" data-reveal>Answer twelve questions about how your accounts department actually works. You get a 0 to 100 score and an estimate of what manual work is costing you per year. No login, nothing to download.</p>
     </div>
   </section>
 
@@ -107,7 +108,7 @@
             <p id="verdict"></p>
           </div>
 
-          <p style="font-size:.88rem;color:var(--cream-faint);text-align:left">This is an estimate built from your answers, not a measurement. The Back-Office Time Audit measures it properly &mdash; task by task, priced at your team&rsquo;s real salary cost, signed off by you. It&rsquo;s free, takes 60&ndash;90 minutes, and the report is yours whether or not you work with us. If the number turns out to be small, you&rsquo;ve lost 60 minutes.</p>
+          <p style="font-size:.88rem;color:var(--cream-faint);text-align:left">This is an estimate built from your answers, not a measurement. The Back-Office Time Audit measures it properly: task by task, priced at your team&rsquo;s real salary cost, signed off by you. It&rsquo;s free, takes 60 to 90 minutes, and the report is yours whether or not you work with us. If the number turns out to be small, you&rsquo;ve lost 60 minutes.</p>
 
           <div style="text-align:left;margin-top:2rem">
             <p class="form-divider">Want the audit? Leave your details</p>
@@ -208,7 +209,7 @@
       a: [ {l:"No", p:0}, {l:"Sometimes", p:2}, {l:"Often", p:3}, {l:"Almost always", p:4} ] },
 
     { q: "If the person who knows the Excel resigned tomorrow, how long to recover?",
-      a: [ {l:"A day &mdash; it&rsquo;s documented", p:0}, {l:"About a week", p:2}, {l:"About a month", p:3}, {l:"Honestly, no idea", p:4} ] },
+      a: [ {l:"A day, it&rsquo;s documented", p:0}, {l:"About a week", p:2}, {l:"About a month", p:3}, {l:"Honestly, no idea", p:4} ] },
 
     { q: "Roughly what does one accounts person cost per month, fully loaded?",
       a: [ {l:"Under &#8377;25,000", p:0, r:22000}, {l:"&#8377;25,000 to &#8377;40,000", p:1, r:32000}, {l:"&#8377;40,000 to &#8377;60,000", p:2, r:50000}, {l:"More than &#8377;60,000", p:3, r:70000} ] }
@@ -279,10 +280,10 @@
     var band, verdict;
     if (score <= 30) {
       band = "Mostly automated already";
-      verdict = "Your back office is in reasonable shape. An audit would probably find one or two workflows worth automating, not a rebuild — and we’d tell you if it isn’t worth the money.";
+      verdict = "Your back office is in reasonable shape. An audit would probably find one or two workflows worth automating, not a rebuild. We’d tell you if it isn’t worth the money.";
     } else if (score <= 55) {
       band = "Some manual load";
-      verdict = "There is real manual work here, concentrated in a couple of tasks. That is usually a single-workflow job — the kind of thing a Sprint or the Essential package covers.";
+      verdict = "There is real manual work here, concentrated in a couple of tasks. That is usually a single-workflow job, the kind of thing a Sprint or the Essential package covers.";
     } else if (score <= 75) {
       band = "Heavy manual load";
       verdict = "This is the pattern we see most often: invoices, bank files and follow-ups all being handled by hand, with one person holding the knowledge. Two or three workflows usually recover most of it.";
@@ -342,7 +343,7 @@
     var s = summary();
     if (!s.ok) { e.preventDefault(); document.getElementById("sStatus").textContent = "Add your name and a mobile or email first."; return; }
     this.href = "mailto:info@fluxautomations.in?subject=" +
-      encodeURIComponent("Manual Work Score " + state.score + "/100 — audit request") +
+      encodeURIComponent("Manual Work Score " + state.score + "/100, audit request") +
       "&body=" + encodeURIComponent(s.text);
   });
 
