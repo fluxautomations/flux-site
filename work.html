@@ -75,7 +75,7 @@
     <div class="container">
       <span class="eyebrow" data-reveal>Case studies</span>
       <h1 data-reveal>Real work, <span class="grad-text">real time saved</span></h1>
-      <p class="lede" data-reveal>What was broken, and exactly what we built. Every system below runs on the client&rsquo;s own machines &mdash; documented, trained, handed over.</p>
+      <p class="lede" data-reveal>What was broken, and exactly what we built for it. Every system below runs on the client&rsquo;s own machines: documented, trained, handed over.</p>
     </div>
   </section>
 
@@ -90,7 +90,7 @@
             <div class="work-tags"><span class="chip">Invoice capture</span><span class="chip">OCR</span><span class="chip">Tally</span><span class="chip">Runs on your server</span></div>
             <h3>Invoice capture engine</h3>
             <div class="work-block"><span class="k">The problem</span><p>Processing vendor invoices from WhatsApp, Telegram or email meant opening PDFs, reading unstructured formats, and typing data into an Excel log by hand.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>Forward an invoice image or PDF and within seconds it extracts vendor, date, GST amount, category and total &mdash; logging it into a master sheet and posting the entry to the ERP on command.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>Forward the image or PDF and within seconds it pulls out vendor, date, GST amount, category and total, logs the line into a master sheet, and posts the entry to the ERP on command.</p></div>
             <div class="work-block"><span class="k">The handover</span><p>Documentation, operator training and certification, full source code. Runs entirely on the client&rsquo;s own hardware.</p></div>
             <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
@@ -101,9 +101,9 @@
           <div class="idx">02</div>
           <div>
             <div class="work-tags"><span class="chip">Accounts Payable</span><span class="chip">Bank Integration</span><span class="chip">Streamlit App</span><span class="chip">Runs on your server</span></div>
-            <h3>End-to-end automated payouts dashboard</h3>
+            <h3>Payouts dashboard, from bill to bank file</h3>
             <div class="work-block"><span class="k">The problem</span><p>Managing vendor payouts meant checking Tally for outstanding bills, formatting bank upload files (NEFT/RTGS), and manually emailing payment advice to every vendor.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>A secure local web dashboard ingests payout inputs, fuzzy-matches the right vendor, allocates payments to outstanding bills on a FIFO basis, pushes the transaction back to the ERP, generates bank-ready files, and bulk-sends payment advice emails.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>A secure web dashboard running inside the client&rsquo;s network. It takes the payout inputs, fuzzy-matches them to the right vendor, and allocates against outstanding bills FIFO. From there it writes the transaction back to the ERP, produces the bank-ready file, and sends the advice emails in one go.</p></div>
             <div class="work-block"><span class="k">The handover</span><p>Deployed inside the client&rsquo;s network. No payout data leaves the premises. Documentation, training and source code handed over.</p></div>
             <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
@@ -114,9 +114,9 @@
           <div class="idx">03</div>
           <div>
             <div class="work-tags"><span class="chip">Dashboards</span><span class="chip">Web App</span><span class="chip">Scheduled refresh</span></div>
-            <h3>A dashboard that behaves like an intelligence hub</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Standard ERP reports rarely show what a business actually needs to see. Aging spikes, margin dips and duplicate vendor entries only surface when someone goes looking.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>Customised, visually rich dashboards that surface real trends and meaningful insights &mdash; pulled directly from the ERP and refreshed on a scheduled frequency.</p></div>
+            <h3>A dashboard that flags things before anyone asks</h3>
+            <div class="work-block"><span class="k">The problem</span><p>Standard ERP reports rarely show what a business actually needs to see. Aging spikes, margin dips and duplicate vendor entries only surface when someone goes looking, and usually nobody does until month-end.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>A custom dashboard pulled straight from the ERP and refreshed on a set schedule, built around the specific movements this owner wanted flagged rather than a standard reporting template.</p></div>
             <div class="work-block"><span class="k">The handover</span><p>Runs on the client&rsquo;s own server, reviewed in a fixed 20-minute monthly session with the owner.</p></div>
             <a class="demo" href="dashboarddemo.html">See live demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
             <br><span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
@@ -129,8 +129,8 @@
           <div>
             <div class="work-tags"><span class="chip">Accounts Receivable</span><span class="chip">Tally XML</span><span class="chip">Outlook</span></div>
             <h3>Intelligent AR &amp; follow-up engine</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Tracking aging bills, matching them against client ledgers, and manually sending follow-up emails was time-consuming and prone to human error.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>An automated pipeline extracts real-time Bills Receivable data from Tally, builds aging buckets, generates an interactive Excel dashboard with forecast charts, and dispatches personalised follow-up emails via Outlook.</p></div>
+            <div class="work-block"><span class="k">The problem</span><p>Someone had to track which bills were aging, tie them back to the client ledger, then write the follow-up emails one at a time. It took hours, and the ones that got missed were the ones nobody noticed.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>A pipeline that reads live Bills Receivable data out of Tally and sorts it into aging buckets. It builds an interactive Excel dashboard with forecast charts, then sends personalised follow-ups through Outlook.</p></div>
             <div class="work-block"><span class="k">The handover</span><p>Runs on the client&rsquo;s machine on a schedule. Documented, trained, owned by the client.</p></div>
             <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
@@ -142,8 +142,8 @@
           <div>
             <div class="work-tags"><span class="chip">Browser Automations</span><span class="chip">Playwright</span><span class="chip">No API Needed</span></div>
             <h3>Browser automation without API access</h3>
-            <div class="work-block"><span class="k">The problem</span><p>Many portals &mdash; government sites, vendor dashboards, legacy ERP interfaces &mdash; offer no API. Repetitive tasks had to be done manually, browser tab by browser tab.</p></div>
-            <div class="work-block"><span class="k">The solution</span><p>Using Playwright and Selenium, we automate the browser itself &mdash; logging in, navigating pages, filling forms, clicking buttons, and extracting data exactly as a human would, but on a schedule and at scale. If you can do it in a browser, we can automate it.</p></div>
+            <div class="work-block"><span class="k">The problem</span><p>Government sites, vendor portals, legacy ERP interfaces. A lot of them offer no API at all, so the work got done manually, browser tab by browser tab.</p></div>
+            <div class="work-block"><span class="k">The solution</span><p>With Playwright and Selenium we automate the browser itself: logging in, moving through pages, filling forms, clicking buttons, reading the data off the screen the way a person would, except on a schedule and without anyone sitting there. If it can be done in a browser, it can usually be automated.</p></div>
             <div class="work-block"><span class="k">The handover</span><p>Scripts, credentials handling and documentation stay on the client&rsquo;s own machine.</p></div>
             <span class="badge-guar" style="margin-top:1.2rem">Guaranteed in writing</span>
           </div>
@@ -162,7 +162,7 @@
       <p>The Back-Office Time Audit measures the hours your team spends retyping data, prices them at your own salary cost, and hands you a written number. You keep the report whether or not you work with us.</p>
       <div class="cta-row">
         <a class="btn btn-primary" data-magnetic href="contact.html">Book the free audit <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a class="btn btn-ghost" data-magnetic href="manual-work-score.html">Or take the Manual Work Score</a>
+        <a class="btn btn-ghost" data-magnetic href="testimonials.html">Read what clients wrote</a>
       </div>
     </div>
   </div>
@@ -187,6 +187,7 @@
       <nav class="footer-links" aria-label="Footer">
         <a href="services.html">Services</a>
         <a href="work.html">Case Studies</a>
+        <a href="testimonials.html">Testimonials</a>
         <a href="pricing.html">Pricing</a>
         <a href="guarantee.html">Guarantee</a>
         <a href="about.html">About</a>
